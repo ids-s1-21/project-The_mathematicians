@@ -1,6 +1,6 @@
 ---
-title: Project title
-author: by Team name
+title: We're not sure yet
+author: by The Mathematicians
 output: github_document
 ---
 

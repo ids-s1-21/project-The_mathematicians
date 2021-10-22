@@ -1,6 +1,6 @@
-Project title
+We’re not sure yet
 ================
-by Team name
+by The Mathematicians
 
 ## Summary
 
