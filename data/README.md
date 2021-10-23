@@ -1,8 +1,10 @@
-# data
+# athlete_events_selected.csv
 
-The source data is `athlete_events.csv` and the data analysed by the project is `athlete_events_selected.csv`.
+The data analysed by the project is `athlete_events_selected.csv` which is drawn from the source data `athlete_events.csv`.
 
-## athlete_events_selected.csv
+## Format and variables
+
+A csv file with 1029 observational units and 16 variables.
 
 - `ID`: Unique ID for each athlete.
 - `Name`: The name of the athlete.
