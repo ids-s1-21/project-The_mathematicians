@@ -1,6 +1,6 @@
 Project proposal
 ================
-Team name
+The Mathematicians
 
 ``` r
 library(tidyverse)
