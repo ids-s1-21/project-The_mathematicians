@@ -1,6 +1,6 @@
 ---
 title: "Project proposal"
-author: "Team name"
+author: The mathematician
 output: github_document
 ---
 
@@ -14,8 +14,34 @@ library(dplyr)
 
 ## 1. Introduction
 
+Our research aims at investigating the performance of elder athletes (athletes with age greater than 55) in multiple aspects:
+  1. Whether there are more female or male athletes with ages above 55?
+  2. What types of sports and events they are more likely to participate?
+  3. Within athletes with ages above 55, is there any difference between the overall performance of male and female athletes? Which performs better?
+  etc.
+
+The data is obtained from TidyTuesday. The data is collected using an observational study on historical records of athletes who participated Olympics games. 
+Cases are the participation of the athlete. So one athlete may occupies multiple columns if he/she participated multiple Olympics games or participated in multiple events in one Olympics games. There are 1029 cases in total.
+There are 15 variables. They are:
+- `ID`: Unique ID for each athlete.
+- `Name`: The name of the athlete.
+- `Sex`: Sex of the athelete. "F" means female and "M" means male.
+- `Age`: Age of the athlete. In `athlete_events.csv`, this variable is greater than 55.
+- `Height`: Height of the athlete in centimeter.
+- `Weight`: Weight of the athlete in kilogram.
+- `Team`: The sport team of which the athlete is a member.
+- `NOC`: IOC country code of the country represented by the athlete.
+- `Games`: The Olympics game that the athlete participated. One athlete could participate multiple games.
+- `Year`: The year of the event.
+- `Season`: The season of the event (Spring, Summer, Autumn or Winter).
+- `City`: The city where the Olympics game was hosted.
+- `Sport`: The type of sport that the athlete participated.
+- `Event`: The event where the athlete took part.
+- `Medel`: The medal obtained by the athlete in the event. "NA" indicates no medal.
 
 
+  
+  
 ## 2. Data
 
 ```{r glimpse-dataframe, echo = FALSE, warning = FALSE}
