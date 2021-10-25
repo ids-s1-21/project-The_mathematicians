@@ -1,3 +1,8 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
 Project proposal
 ================
 The mathematician
@@ -19,7 +24,8 @@ Our research aims at investigating the performance of elder athletes
 there are more female or male athletes with ages above 55? 2. What types
 of sports and events they are more likely to participate? 3. Within
 athletes with ages above 55, is there any difference between the overall
-performance of male and female athletes? Which performs better? etc.
+performance of male and female athletes? Which performs better? etc. 4.
+How ages of these athletes distribute?
 
 The data is obtained from TidyTuesday. The data is collected using an
 observational study on historical records of athletes who participated
@@ -74,3 +80,50 @@ no medal.
     ## $ Medal  <chr> NA, NA, NA, NA, NA, NA, NA, NA, NA, "Gold", NA, NA, NA, NA, NA,…
 
 ## 3. Data analysis plan
+
+-   Variables: Multiple outcome (y) and predictor (x) variables are
+    needed. To answer the first question, we need x to be “Sex” (either
+    F or M) and y to be the number of athletes. To answer tne second
+    question, we need x to be the events and y to be the number of
+    athletes participating in each event (And we probably need to filp
+    the coordinate). To answer the third question, we need x to be “Sex”
+    and y to be the number of medals obtained. To answer the fourth
+    question, we need x to be “Age” and y to be the number of athletes.
+
+-   Exploratory data analysis
+
+1.  Actual number of athlete: There are some athletes who occupies
+    multiple rows, we need to remove the redundant entries to show the
+    actual number of athlete. However, the removal should not be
+    permenant because they are needed for some in-depth researches
+    later.
+
+``` r
+unique(athlete_events_filtered$Name) %>%
+  length()
+```
+
+    ## [1] 477
+
+There are only 477 unique athletes which means at least some of the
+athletes participated in multiple events.
+
+2.  Mean age We can also find the mean age of athletes which could be
+    integrated into the answer to question 4.
+
+``` r
+athlete_events_filtered %>%
+  distinct(Name, .keep_all = TRUE) %>%
+  summarise(mean_age = mean(Age))
+```
+
+    ## # A tibble: 1 × 1
+    ##   mean_age
+    ##      <dbl>
+    ## 1     61.3
+
+The mean age is 61.33753. The possibility of the existence of extreme
+values can’t be excluded.
+
+-   Statistical methods: In order to answer the question 4, we need to
+    use standard deviation to examine how age are distributed.
