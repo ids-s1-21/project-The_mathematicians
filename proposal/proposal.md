@@ -1,16 +1,12 @@
-Project proposal
+Project proposal: students’ beliefs about mathematics
 ================
-The mathematician
+The Mathematicians
 
 ``` r
 library(tidyverse)
 library(broom)
 library(dplyr)
 ```
-
-*For instructions on what each section should include, please see the
-[project page](https://idsed.digital/assessments/project/#proposal) on
-the course website. Remove this text when completing your proposal*.
 
 ## 1. Introduction
 
@@ -161,10 +157,10 @@ responses_joined %>%
 Our hypothesised result for question 1 is that students in the School of
 Mathematics tend to provide answers that are closer to expected answers.
 To make a comparisons between these qualitative answers, we need to
-transfer qualitative data to quantitative data (change answers like
-“Strongly agree”, “agree” to corresponding marks) and perform
-calculation on mean, standard deviation etc in order to get the
-distribution of the data.
+transfer qualitative data into quantitative data (change answers like
+“Strongly agree”or “Agree” to corresponding marks) and perform
+calculations regarding mean, standard deviation, etc… in order to get
+the distribution of the data.
 
 Our hypothesised result for question 2 is that there exists a positive
 correlation between answers to questions measuring “confidence” and
@@ -172,5 +168,5 @@ answers to questions measuring “persistence”. In order to analyse the
 correlation between answers, we may need to implement some linearity
 test and correlation analysis. These may include using linear regression
 models and pearson r correlation test dependent on the situation.
-Although these contents are not covered yet, with some self-study it’s
-possible for us to use them in our data analysis.
+Although these contents have not been covered by this course yet, with
+some self-study it’s possible for us to use them in our data analysis.
