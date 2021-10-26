@@ -99,7 +99,8 @@ So there are 10 columns and 22341 rows.
     Question 2:  
     x should be the answers to one group of questions whereas y should
     be the answers to the other groups of questions. (The grouping of
-    questions would be introduced in the summary part)  
+    questions follows the MAPS categories which would be introduced in
+    the summary part)  
     Question 3: x should be the question number (qnum excluding 0) and y
     should be the percentage of agrees. (i.e. agree/total)
 
