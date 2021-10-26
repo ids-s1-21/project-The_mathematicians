@@ -15,24 +15,25 @@ the course website. Remove this text when completing your proposal*.
 ## 1. Introduction
 
 This data analysis is based on the research project of Dr. George
-Kinnear (which is also where we get our data). The data is collected
-from an anonymous survey about “beliefs about mathematics” which is done
-by students in the School of Mathematics (including both students in the
-School of Mathematics or have School of Mathematics as their second
-school) of the University of Edinburgh in 2019/20.
+Kinnear (which is also the source from which we’ve obtained our data).
+The data is collected from an anonymous survey regarding “Beliefs about
+Mathematics” which was completed by students of the University of
+Edinburgh for the academic year 2019-2020. Said students belong to the
+School of Mathematics (including both students in the School of
+Mathematics or those who have the School of Mathematics as their second
+school)
 
-Our research aims at investigating the beliefs of students toward
-mathematics. There are serveral sub-questions, which include:  
-1. How answers are distributed between students in different schools
+Our research aims at investigating the beliefs of students towards
+mathematics. There are several sub-questions, which include:  
+1. How are answers distributed between students in different schools
 (e.g. School of Mathematics vs. School of Informatics)?  
 2. Are there any correlations between answers (e.g. whether some
 combinations of answers to different questions are more likely to be
 chosen simultaneously)?  
-3. What are the general attitudes of all students toward mathematics?  
-4. How is the answers from students differ from expected answers?  
-…etc.
+3. What are the general attitudes of all students towards mathematics?  
+4. How do the answers of students differ from expected answers?
 
-There are 2 raw data which is needed to be processed. Each of them
+There are 2 raw data sets which need to be processed. Each of them
 contains different cases and variables.  
 1. responses\_joined (Main data to be analysed)  
 The cases are answers to each survey question filled by each
@@ -157,16 +158,16 @@ responses_joined %>%
 
 -   Statistical methods:
 
-Our hypothesized result to question 1 is that students in the School of
-Mathematics tend to provide answers that are more close to expected
-answers. To make a comparisons between these qualitative answers, we
-need to transfer qualitative data to quantitative data (change answers
-like “Strongly agree”, “agree” to corresponding marks) and perform
+Our hypothesised result for question 1 is that students in the School of
+Mathematics tend to provide answers that are closer to expected answers.
+To make a comparisons between these qualitative answers, we need to
+transfer qualitative data to quantitative data (change answers like
+“Strongly agree”, “agree” to corresponding marks) and perform
 calculation on mean, standard deviation etc in order to get the
 distribution of the data.
 
-Our hypothesized result to question 2 is that there exists a positive
-correlations between answers to questions measuring “confidence” and
+Our hypothesised result for question 2 is that there exists a positive
+correlation between answers to questions measuring “confidence” and
 answers to questions measuring “persistence”. In order to analyse the
 correlation between answers, we may need to implement some linearity
 test and correlation analysis. These may include using linear regression
