@@ -114,8 +114,8 @@ unique(athlete_events_filtered$Name) %>%
 
     ## [1] 477
 
-There are only 477 unique athletes which means at least some of the
-athletes participated in multiple events.
+There are 477 unique athletes which means at least some of the athletes
+participated in multiple events.
 
 2.  Mean age We can also find the mean age of athletes which could be
     integrated into the answer to question 4.
