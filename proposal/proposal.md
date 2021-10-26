@@ -113,7 +113,13 @@ responses_joined_completed %>%
   summarise(agrees = sum(answer %in% c("Strongly Agree", "Agree"), na.rm = TRUE)) %>%
   arrange(desc(agrees)) %>%
   ggplot() +
-  geom_col(mapping = aes(x = factor(qnum), y = agrees))
+  geom_col(mapping = aes(x = factor(qnum), y = agrees)) +
+  labs(
+    x = "Question No.",
+    y = "Number of agrees",
+    title = "Number of agrees for each question"
+  ) +
+  theme_minimal()
 ```
 
 ![](proposal_files/figure-gfm/number-agree-1.png)<!-- -->
