@@ -67,8 +67,15 @@ responses_joined <- responses_joined %>%
   filter(Q0 != "No, I do not consent")
 ```
 
+<<<<<<< HEAD
 2. Number of agrees for each question
 It's good to take a quick look at how many agrees are there for each question. This could help us judge whether there is any pattern for answers to distribute.
+=======
+There are 477 unique athletes which means at least some of the athletes participated in multiple events.
+
+2. Mean age
+We can also find the mean age of athletes which could be integrated into the answer to question 4.
+>>>>>>> 9caad11119dbba2604e18c1552d91ccb679c1dc6
 
 ```{r number-agree}
 responses_joined %>%
