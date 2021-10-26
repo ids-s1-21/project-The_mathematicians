@@ -3,7 +3,7 @@ output:
   word_document: default
   html_document: default
 ---
-# athlete_events_filtered.csv
+# Data sets
 
 The data analysed by the project is `responses_joined_completed.csv` which is drawn from the source data `ANON_MAPS_responses_1920_S1.csv`, `demographics.csv` and `maps_questions_processed.csv`.
 
