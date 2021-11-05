@@ -1,0 +1,124 @@
+---
+title: "MainProject"
+author: "The Mathematicians"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/cloud/project/data")
+```
+## Libraries
+
+```{r libraries}
+library(tidyverse)
+library(broom)
+library(dplyr)
+```
+
+
+## Load the necesary data
+
+These are the same data set but with different pivoting methods. Dependent on the task, different methods are needed to be used.
+
+```{r load-data}
+responses_joined <- read_csv("responses_joined.csv")
+responses_joined_completed <- read_csv("responses_joined_completed.csv")
+expected_answer <- read_csv("maps_questions_processed.csv")
+```
+
+## Exploratory Data Analysis (Not finished yet. More analysis needed)
+
+We are going to do some exploratory data analysis to get a general understanding of data.
+
+1. Number of students in different schools.
+By checking the number of students in different schools, we are able to get some knowledge on the reliability of our results. This is because if a school has a very small sample size, then the conclusion about this school generated from these samples may not be reliable.
+
+```{r number_in_schools}
+responses_joined %>%
+  filter(is.na(programme_school_name) == FALSE) %>%
+  count(programme_school_name) %>%
+  arrange(desc(n))
+```
+
+As we can see, the majority of people who did the survey are from the following schools: School of Informatics, School of Mathematics, School of Economics	and	School of Physics and Astronomy. So the conclusions about these schools may be more representative.
+
+2. Number of agrees for each question
+It's good to take a quick look at how many agrees are there for each question. This could help us judge whether there is any pattern for answers to distribute.
+
+```{r number-agree}
+responses_joined_completed %>%
+  group_by(qnum) %>%
+  summarise(agrees = sum(answer %in% c("Strongly Agree", "Agree"), na.rm = TRUE)) %>%
+  arrange(desc(agrees)) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = factor(qnum), y = agrees)) +
+  labs(
+    x = "Question No.",
+    y = "Number of agrees",
+    title = "Number of agrees for each question"
+  ) +
+  theme_minimal()
+```
+
+According to the plot, there may by no significant general pattern. Therefore, we may need to analyse the answers question by question or based on categories of the questions.
+
+Not finished yet... More to be added...
+
+## Categorising questions (Not finished yet. Explanations to each categories are needed)
+
+The methodology of our project is based on the research "The Mathematics Attitudes and Perceptions Survey: an instrument to assess expert-like views and dispositions among undergraduate mathematics students" by Warren Code et al.  
+In their research they put each questions into the following categories:  
+- Confidence in Mathematics: Questions No.1, 14, 17, 20  
+
+- Persistence in Problem Solving: Questions No.8, 10, 24, 29  
+
+- Growth Mindset: Question No.5, 6, 22, 31  
+
+- Interest in Mathematics: Question No.12, 26, 32  
+
+- Relationship between Mathematics and Real World: Question No.13, 15, 21  
+
+- Sense Making: Question No.3, 4, 11, 18, 23  
+
+- Nature of the Answers: Question No.2, 7, 9, 16, 28, 30  
+
+- No category: Question No.25, 27 
+
+```{r add_categories}
+responses_joined_completed <- responses_joined_completed %>%
+  mutate(category = case_when(
+    qnum %in% c(1, 14, 17, 20) ~ "confidence",
+    qnum %in% c(8, 10, 24, 29) ~ "persistence",
+    qnum %in% c(5, 6, 22, 31) ~ "growth_mindset",
+    qnum %in% c(12, 26, 32) ~ "interest",
+    qnum %in% c(13, 15, 21) ~ "real_world",
+    qnum %in% c(3, 4, 11, 18, 23) ~ "sense",
+    qnum %in% c(2, 7, 9, 16, 28, 30) ~ "nature",
+    qnum %in% c(25, 27) ~ "no_category",
+    qnum == 0 ~ "consent",
+    qnum == 19 ~ "filter"
+  ))
+```
+
+## Assign a numeric value for answers
+
+Each student will get 1 mark for answering the question at a direction that is the same as the direction of the expected answer and 0 otherwise. For example, if the expected answer is "Agree" then both "Agree" and "Strongly Agree" will be counted as 1 mark and 'Neutral", "Disagree", "Strongly Disagree" will be counted as 0.  
+There are different methods of assigning numeric values to these categorical variables, for instance, for questions of which expected answers are "Agree", we could give marks for "Strongly Agree", "Agree", "Neutral", "Disagree" and "Strongly Disagree" as followed: 2, 1, 0, -1, -2.  
+These different methods would both be applied and corresponding visualisations would be created. Then we are going to compare which one yields a better visualisation.
+
+```{r assign-numerics-1}
+responses_joined_completed <- responses_joined_completed %>%
+  mutate(mark = case_when(
+    expected_ans == "Disagree" ~ if_else(
+      answer %in% c("Disagree", "Strongly Disagree"), 1, 0
+      ),
+    expected_ans == "Agree" ~ if_else(
+      answer %in% c("Agree", "Strongly Agree"), 1, 0
+      )
+    )
+  )
+
+```
+
+
