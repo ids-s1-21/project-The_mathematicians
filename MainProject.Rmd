@@ -108,7 +108,7 @@ There are different methods of assigning numeric values to these categorical var
 These different methods would both be applied and corresponding visualisations would be created. Then we are going to compare which one yields a better visualisation.
 
 ```{r assign-numerics-1}
-responses_joined_completed <- responses_joined_completed %>%
+responses_joined_numeric_1 <- responses_joined_completed %>%
   mutate(mark = case_when(
     expected_ans == "Disagree" ~ if_else(
       answer %in% c("Disagree", "Strongly Disagree"), 1, 0
@@ -121,4 +121,60 @@ responses_joined_completed <- responses_joined_completed %>%
 
 ```
 
+There are different methods of assigning numeric values to these categorical variables, for instance, for questions of which expected answers are "Agree", we could give marks for "Strongly Agree", "Agree", "Neutral", "Disagree" and "Strongly Disagree" as followed: 2, 1, 0, -1, -2.  
+These different methods would both be applied and corresponding visualisations would be created. Then we are going to compare which one yields a better visualisation.
+
+```{r assign-numerics-2}
+responses_joined_numeric_2 <- responses_joined_completed %>%
+  mutate(mark = case_when(
+    expected_ans == "Agree" ~ case_when(
+      answer == "Strongly Agree" ~ 2,
+      answer == "Agree" ~ 1,
+      answer == "Neutral" ~ 0,
+      answer == "Disagree" ~ -1,
+      answer == "Strongly Disagree" ~ -2
+    ),
+    expected_ans == "Disagree" ~ case_when(
+      answer == "Strongly Agree" ~ -2,
+      answer == "Agree" ~ -1,
+      answer == "Neutral" ~ 0,
+      answer == "Disagree" ~ 1,
+      answer == "Strongly Disagree" ~ 2
+    )
+  ))
+
+```
+
+## Cleaning data for analysis preparation
+
+For both data sets with different methods of assigning marks, in order to perform analyses, we must first discarded those who refused to provide consents. Because if they didn't provide consent, we can't have access to their data. This will be shown as "NA" with which analysis and visualisation can't be performed.
+
+```{r remove-no-consent}
+no_consent_list <- responses_joined_completed %>%
+  filter(qnum == 0 & answer == "No, I do not consent")
+responses_numeric1_filtered <- anti_join(responses_joined_numeric_1, no_consent_list, by = "anon_id")
+responses_numeric2_filtered <- anti_join(responses_joined_numeric_2, no_consent_list, by = "anon_id")
+
+```
+
+Then we remove all question 0 asking for consent as it has done its job.
+After, we consider question 19. Question 19 is a filter statement, it says "We use this statement to discard the survey of people who are not reading the questions. Please select Agree (not Strongly Agree) for this question". Therefore, we should discard all people who didn't select "Agree" in order to get a better representation of the population.
+
+```{r remove-q0}
+responses_numeric1_filtered <- responses_numeric1_filtered %>%
+  filter(qnum != 0)
+responses_numeric2_filtered <- responses_numeric2_filtered %>%
+  filter(qnum != 0)
+
+```
+
+After that, we consider question 19. Question 19 is a filter statement, it says "We use this statement to discard the survey of people who are not reading the questions. Please select Agree (not Strongly Agree) for this question". Therefore, we should discard all people who didn't select "Agree" in order to get a better representation of the population.
+
+```{r remove-q19}
+not_reading_list <- responses_numeric1_filtered %>%
+  filter(qnum == 19 & answer != "Agree") 
+responses_numeric1_filtered <- anti_join(responses_numeric1_filtered, not_reading_list, by = "anon_id")
+responses_numeric2_filtered <- anti_join(responses_numeric2_filtered, not_reading_list, by = "anon_id")
+  
+```
 
