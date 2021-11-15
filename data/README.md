@@ -8,6 +8,7 @@ output:
 The data analysed by the project is `responses_joined_completed.csv` which is drawn from the source data `ANON_MAPS_responses_1920_S1.csv`, `demographics.csv` and `maps_questions_processed.csv`.
 
 ## Format and variables
+
 `ANON_MAPS_responses_1920_S1.csv` is a csv file with 677 rows and 35 columns.  
 Each row/observational unit represents the answers to the survey from a unique student.  
 Each column is a variable, they are:  
