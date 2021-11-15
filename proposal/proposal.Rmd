@@ -27,11 +27,11 @@ Our research aims at investigating the beliefs of students towards mathematics. 
   4. How do the answers of students differ from expected answers?  
     
   
-There are 2 raw data sets which need to be processed. Each of them contains different cases and variables.  
-  1. responses_joined (Main data to be analysed)  
-    The cases are answers to each survey question filled by each student.There are 22341 cases.
-    The original form of the data contains 677 cases and the answer to each question is given by a separate column. Therefore it has 37 variables.
-    The original form will also be used during the analysis process. The reason why the original form is changed to this form is that we need to satisfy the requirement which limits the variable number to 10.  
+Though there are multiple data sets involved. We will focus on one main data set.  
+  responses_joined_completed (Main data to be analysed)  
+  The cases are answers to each survey question filled by each student.There are 22341 cases.
+  The original form of the data contains 677 cases and the answer to each question is given by a separate column. Therefore it has 37 variables.
+  The original form will also be used during the analysis process. The reason why the original form is changed to this form is that we need to satisfy the requirement which limits the variable number to 10.  
   In the process of analysis, there are three major aspects we are planning to investigate.  
   First we are going to consider the correlation between different questions. For this aspect we will need the `qnum` variable representing the number of questions and `answer` variable representing the answers from students for each question. Some questions are in the same category and measure the same thing, so we are going to group the observational units based on this `qnum` variable and analyse `answer` in each group. For example, whether `answer` for some specific `qnum` are more likely to be the same.  
   The second aspect is that we are going to consider the "score" of students. (i.e. How close their answers are to the expected answer). In this aspect we need `answer`, `expected_ans`, `qnum` and `anon_id` variables. We are going to group the answers by `anon_id` which acts as an identification for each student. Then for answers with certain `qnum` (excluding the filter question and consent question), we are going to compare the `answer` (answers from students) to `expected_ans` that represents the answers from experts.  

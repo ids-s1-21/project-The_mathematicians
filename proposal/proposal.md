@@ -29,9 +29,9 @@ chosen simultaneously)?
 3. What are the general attitudes of all students towards mathematics?  
 4. How do the answers of students differ from expected answers?
 
-There are 2 raw data sets which need to be processed. Each of them
-contains different cases and variables.  
-1. responses\_joined (Main data to be analysed)  
+Though there are multiple data sets involved. We will focus on one main
+data set.  
+responses\_joined\_completed (Main data to be analysed)  
 The cases are answers to each survey question filled by each
 student.There are 22341 cases. The original form of the data contains
 677 cases and the answer to each question is given by a separate column.
