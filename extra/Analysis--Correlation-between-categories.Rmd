@@ -1,0 +1,76 @@
+---
+title: "Analysis: Correlations between answers"
+author: "The Mathematicians"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/cloud/project/data")
+```
+
+## Libraries
+
+```{r libraries}
+library(tidyverse)
+library(broom)
+library(dplyr)
+library(patchwork)
+library(tidymodels)
+```
+
+## Load the necesary data
+
+```{r}
+responses_numeric1_filtered <- read_csv("responses_numeric1_filtered.csv")
+```
+
+## Group the data based on their categories
+
+In order to analyse the correlation between answers to questions in different categories, we need to firstly group the data based on categories. And during this section of analysis, we are going to use the data set where scores are given binominally (either 1 or 0) for each individual question. Also, we still need to discard those who didn't finish the whole survey and just completed a part of the questions (as they are less likely to do the survey seriously).
+
+```{r discard-and-group-data}
+not_finish_list <- responses_numeric1_filtered %>%
+  filter(is.na(answer) == TRUE) 
+not_finish_list <- as_tibble(unique(not_finish_list$anon_id))
+not_finish_list <- not_finish_list %>%
+  rename(anon_id = value)
+
+responses_part2 <- anti_join(responses_numeric1_filtered, not_finish_list, by = "anon_id")
+
+responses_summary_part2 <- responses_part2 %>%
+  filter(qnum != 19) %>%
+  group_by(anon_id, category) %>%
+  summarise(sum_category_mark = sum(mark))
+
+responses_summary_part2 <- responses_summary_part2 %>%
+  pivot_wider(names_from = category, values_from = sum_category_mark)
+
+```
+## Pearson correlation test
+
+  Based on the result we obtained above, we could test the correlations between different marks for different categories. We are going to use pearson coefficient which can accurately show their level of correlation. For those with relative high levels of correlation, we could do deeper investigations.  
+  We are going to make a matrix where the intercepted entry between each row and column represents the correlation between the variables (category) represented by each row and column (Each row and column will represent a category)
+
+```{r pearson-correlations-table}
+correlation_matrix <- data.frame(matrix(ncol = 8, nrow = 8))
+rownames(correlation_matrix) <- colnames(responses_summary_part2[2:9])
+colnames(correlation_matrix) <- colnames(responses_summary_part2[2:9])
+for (i in 1:8) {
+  for (j in 1:8) {
+    x <- responses_summary_part2[i + 1]
+    y <- responses_summary_part2[j + 1]
+    correlation_matrix[i, j] <- cor(x, y, method = "pearson")
+  }
+}
+
+correlation_matrix <- correlation_matrix %>%
+  select(-c("no_category"))
+correlation_matrix <- correlation_matrix[-c(5),]
+
+print(correlation_matrix)
+```
+
+  Although these categories don't seem to have significant correlation with others. There are some pairs of categories that have a relatively higher correlation coefficient than others. For example, the correlation coefficient between "interest" and "real_world" is about 0.366 and the correlation coefficient between "interest" and "sense" is approximately 0.367.
+  
+  
