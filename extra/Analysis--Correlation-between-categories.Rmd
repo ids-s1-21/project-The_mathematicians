@@ -71,13 +71,14 @@ correlation_matrix <- correlation_matrix[-c(5),]
 print(correlation_matrix)
 ```
 
-  It seems that these categories don't have significant linear correlations. Therefore, we may need to fit them to a model other than a simple linear model. And, after some processings, we can change the value of the data to be binomial and then we can apply logistic regression model.  
+  It seems that these categories don't have significant linear correlations. Therefore, we may need to fit them to a model other than a simple linear model. And, after some processings, we can change the value of the column we need to use to be binomial and then we can apply logistic regression model.  
   
   We know that for each individual question, the mark is either 0 or 1 and each category contains several questions like this. Therefore, the distribution of total mark of each category is similar to a binomial distribution. The difference is that in binomial distribution, the probability of getting each question correctly is fixed while in this situation the probability may not be fixed.  
   
   However, we know that if a student answers each question by pure guessing, the probability of answering each question correctly will just be 2/5 (Since "Neutral" will always get a score of 0). Therefore, we could calculate a "critical number" such that if a student gets a number of correct answers that is less than the critical number, than the probability that the student is guessing the answer is more than the probability that the student is doing these questions seriously.  
   
-  Based on this, we could turn the total mark of each student into 1 or 0 according to the following rule:  If the number of correct answer is smaller than the "critical number", we can mark them as 0, otherwise 1.  
+  Based on this, we could turn the total mark of each student into 1 or 0 according to the following rule:  If the number of correct answer is smaller than the "critical number", we can mark them as 0, otherwise 1.
+  
   When it comes to the calculation of critical number, we could simply find a number "m" for each category such that the probability for the number of correct answers to be less than "m" is greater than 50% under the distribution of Bin(n, 1/2) where n is the total number of question in each category.  
   
   For example, if there are 4 question in a category, we can find that P(Right answer <= 2) = (1/2)^4 * (4C0 + 4C1 + 4C2) = 0.6875 while P(Right answer <= 1) < 0.5. In this case, the "critical number" will be 2.   
@@ -98,22 +99,105 @@ print(correlation_matrix)
   
   - Nature of the Answers: 3  
   
-  
+First we are going to test our model on "interest" and "real_world", where we decided to let "real_world" to be our outcome.
+
 ```{r change-to-(0,1)}
-responses_summary_part2_binary <- responses_summary_part2 %>%
+interest_realworld_data <- responses_summary_part2 %>%
   mutate(
-    confidence = if_else(confidence <= 2, 0, 1),
-    persistence = if_else(persistence <= 2, 0, 1),
-    growth_mindset = if_else(growth_mindset <= 2, 0, 1),
-    sense = if_else(sense <= 2, 0, 1),
-    interest = if_else(interest <= 1, 0 ,1),
-    real_world = if_else(real_world <= 1, 0 ,1),
-    nature = if_else(nature <= 3, 0, 1)
+    interest = as_factor(interest),
+    real_world = as_factor(if_else(real_world <= 1, 0 ,1)),
   ) %>%
-  select(-c("no_category"))
+  select(interest, real_world)
+```
+Before creating a recipe, we first need to split the data into training data and testing data.
+
+```{r split-data}
+set.seed(9841)
+data_split <- initial_split(interest_realworld_data, prop = 0.8)
+training_data = training(data_split)
+testing_data = testing(data_split)
 ```
 
-## Fitting a logistic regression model
 
+Then we start to create a data recipe and a corresponding model.
 
+```{r create-recipe}
+data_rec <- recipe(
+  real_world ~ interest,
+  data = training_data
+) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+data_model <- logistic_reg() %>%
+  set_engine("glm")
+```
+
+After that, we make a workflow and fit the data to the model.
+
+```{r make-workflow}
+data_workflow <- workflow() %>%
+  add_model(data_model) %>%
+  add_recipe(data_rec)
+
+data_fit <- data_workflow %>%
+  fit(data = training_data)
+
+tidy(data_fit)
+```
+
+Then we are going to use this model to predict the outcome of testing data in order to see whether the model fit is good.
+
+```{r test-predict}
+data_predict <- predict(data_fit, testing_data, type = "prob") %>%
+  bind_cols(testing_data)
+data_predict %>%
+  select(.pred_0, .pred_1, real_world)
+```
+
+Also, we can make an roc curve for our model.
+
+```{r roc-curve}
+data_predict %>%
+  roc_auc(
+    truth = real_world,
+    .pred_1,
+    event_level = "second"
+  )
+
+```
+
+## Writing the model-fitting function (Not finished)
+
+As there are multiple groups of values that is needed to be fitted, we decided to create a function in order to prevent writing codes repetitively,
+
+```{r function-creating}
+model_fitting <- function(responses_binary, dep_var, indep_var) {
+  class(dep_var)
+  #Split the data to training data and testing data
+  set.seed(9841)
+  data_split <- initial_split(responses_binary, prop = 0.8)
+  training_data = training(data_split)
+  testing_data = testing(data_split)
   
+  #Create a recipe
+  data_rec <- recipe(
+    dep_var ~ indep_var,
+    data = training_data
+  ) %>%
+    step_dummy(all_nominal(), -all_outcomes())
+  data_model <- logistic_reg() %>%
+    set_engine("glm")
+  
+  #Create workflow
+  data_workflow <- workflow() %>%
+    add_model(data_model) %>%
+    add_recipe(data_rec)
+  data_fit <- data_workflow %>%
+    fit(data = training_data)
+  
+  #Show the model (to be considered)
+  tidy(data_fit)
+  return(data_fit)
+}
+```
+

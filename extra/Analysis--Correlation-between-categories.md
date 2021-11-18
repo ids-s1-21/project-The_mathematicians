@@ -147,8 +147,8 @@ print(correlation_matrix)
 It seems that these categories don’t have significant linear
 correlations. Therefore, we may need to fit them to a model other than a
 simple linear model. And, after some processings, we can change the
-value of the data to be binomial and then we can apply logistic
-regression model.
+value of the column we need to use to be binomial and then we can apply
+logistic regression model.
 
 We know that for each individual question, the mark is either 0 or 1 and
 each category contains several questions like this. Therefore, the
@@ -167,8 +167,8 @@ probability that the student is doing these questions seriously.
 
 Based on this, we could turn the total mark of each student into 1 or 0
 according to the following rule: If the number of correct answer is
-smaller than the “critical number”, we can mark them as 0, otherwise
-1.  
+smaller than the “critical number”, we can mark them as 0, otherwise 1.
+
 When it comes to the calculation of critical number, we could simply
 find a number “m” for each category such that the probability for the
 number of correct answers to be less than “m” is greater than 50% under
@@ -198,18 +198,138 @@ category:
 
 -   Nature of the Answers: 3
 
+First we are going to test our model on “interest” and “real_world”,
+where we decided to let “real_world” to be our outcome.
+
 ``` r
-responses_summary_part2_binary <- responses_summary_part2 %>%
+interest_realworld_data <- responses_summary_part2 %>%
   mutate(
-    confidence = if_else(confidence <= 2, 0, 1),
-    persistence = if_else(persistence <= 2, 0, 1),
-    growth_mindset = if_else(growth_mindset <= 2, 0, 1),
-    sense = if_else(sense <= 2, 0, 1),
-    interest = if_else(interest <= 1, 0 ,1),
-    real_world = if_else(real_world <= 1, 0 ,1),
-    nature = if_else(nature <= 3, 0, 1)
+    interest = as_factor(interest),
+    real_world = as_factor(if_else(real_world <= 1, 0 ,1)),
   ) %>%
-  select(-c("no_category"))
+  select(interest, real_world)
 ```
 
-## Fitting a logistic regression model
+    ## Adding missing grouping variables: `anon_id`
+
+Before creating a recipe, we first need to split the data into training
+data and testing data.
+
+``` r
+set.seed(9841)
+data_split <- initial_split(interest_realworld_data, prop = 0.8)
+training_data = training(data_split)
+testing_data = testing(data_split)
+```
+
+Then we start to create a data recipe and a corresponding model.
+
+``` r
+data_rec <- recipe(
+  real_world ~ interest,
+  data = training_data
+) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+
+data_model <- logistic_reg() %>%
+  set_engine("glm")
+```
+
+After that, we make a workflow and fit the data to the model.
+
+``` r
+data_workflow <- workflow() %>%
+  add_model(data_model) %>%
+  add_recipe(data_rec)
+
+data_fit <- data_workflow %>%
+  fit(data = training_data)
+
+tidy(data_fit)
+```
+
+    ## # A tibble: 4 × 5
+    ##   term        estimate std.error statistic  p.value
+    ##   <chr>          <dbl>     <dbl>     <dbl>    <dbl>
+    ## 1 (Intercept)   0.0500     0.224     0.224 0.823   
+    ## 2 interest_X3   0.972      0.268     3.63  0.000283
+    ## 3 interest_X1  -0.561      0.428    -1.31  0.190   
+    ## 4 interest_X0  -2.09       0.653    -3.19  0.00140
+
+Then we are going to use this model to predict the outcome of testing
+data in order to see whether the model fit is good.
+
+``` r
+data_predict <- predict(data_fit, testing_data, type = "prob") %>%
+  bind_cols(testing_data)
+data_predict %>%
+  select(.pred_0, .pred_1, real_world)
+```
+
+    ## # A tibble: 94 × 3
+    ##    .pred_0 .pred_1 real_world
+    ##      <dbl>   <dbl> <fct>     
+    ##  1   0.265   0.735 1         
+    ##  2   0.265   0.735 1         
+    ##  3   0.265   0.735 1         
+    ##  4   0.265   0.735 0         
+    ##  5   0.265   0.735 1         
+    ##  6   0.265   0.735 1         
+    ##  7   0.265   0.735 0         
+    ##  8   0.265   0.735 1         
+    ##  9   0.487   0.513 1         
+    ## 10   0.487   0.513 0         
+    ## # … with 84 more rows
+
+Also, we can make an roc curve for our model.
+
+``` r
+data_predict %>%
+  roc_auc(
+    truth = real_world,
+    .pred_1,
+    event_level = "second"
+  )
+```
+
+    ## # A tibble: 1 × 3
+    ##   .metric .estimator .estimate
+    ##   <chr>   <chr>          <dbl>
+    ## 1 roc_auc binary         0.674
+
+## Writing the model-fitting function (Not finished)
+
+As there are multiple groups of values that is needed to be fitted, we
+decided to create a function in order to prevent writing codes
+repetitively,
+
+``` r
+model_fitting <- function(responses_binary, dep_var, indep_var) {
+  class(dep_var)
+  #Split the data to training data and testing data
+  set.seed(9841)
+  data_split <- initial_split(responses_binary, prop = 0.8)
+  training_data = training(data_split)
+  testing_data = testing(data_split)
+  
+  #Create a recipe
+  data_rec <- recipe(
+    dep_var ~ indep_var,
+    data = training_data
+  ) %>%
+    step_dummy(all_nominal(), -all_outcomes())
+  data_model <- logistic_reg() %>%
+    set_engine("glm")
+  
+  #Create workflow
+  data_workflow <- workflow() %>%
+    add_model(data_model) %>%
+    add_recipe(data_rec)
+  data_fit <- data_workflow %>%
+    fit(data = training_data)
+  
+  #Show the model (to be considered)
+  tidy(data_fit)
+  return(data_fit)
+}
+```
