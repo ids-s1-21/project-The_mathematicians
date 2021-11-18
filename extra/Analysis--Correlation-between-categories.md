@@ -144,9 +144,72 @@ print(correlation_matrix)
     ## real_world      1.0000000 0.3416629
     ## sense           0.3416629 1.0000000
 
-Although these categories don’t seem to have significant correlation
-with others. There are some pairs of categories that have a relatively
-higher correlation coefficient than others. For example, the correlation
-coefficient between “interest” and “real\_world” is about 0.366 and the
-correlation coefficient between “interest” and “sense” is approximately
-0.367.
+It seems that these categories don’t have significant linear
+correlations. Therefore, we may need to fit them to a model other than a
+simple linear model. And, after some processings, we can change the
+value of the data to be binomial and then we can apply logistic
+regression model.
+
+We know that for each individual question, the mark is either 0 or 1 and
+each category contains several questions like this. Therefore, the
+distribution of total mark of each category is similar to a binomial
+distribution. The difference is that in binomial distribution, the
+probability of getting each question correctly is fixed while in this
+situation the probability may not be fixed.
+
+However, we know that if a student answers each question by pure
+guessing, the probability of answering each question correctly will just
+be 2/5 (Since “Neutral” will always get a score of 0). Therefore, we
+could calculate a “critical number” such that if a student gets a number
+of correct answers that is less than the critical number, than the
+probability that the student is guessing the answer is more than the
+probability that the student is doing these questions seriously.
+
+Based on this, we could turn the total mark of each student into 1 or 0
+according to the following rule: If the number of correct answer is
+smaller than the “critical number”, we can mark them as 0, otherwise
+1.  
+When it comes to the calculation of critical number, we could simply
+find a number “m” for each category such that the probability for the
+number of correct answers to be less than “m” is greater than 50% under
+the distribution of Bin(n, 1/2) where n is the total number of question
+in each category.
+
+For example, if there are 4 question in a category, we can find that
+P(Right answer \<= 2) = (1/2)^4 \* (4C0 + 4C1 + 4C2) = 0.6875 while
+P(Right answer \<= 1) \< 0.5. In this case, the “critical number” will
+be 2.
+
+According to the method of categorising questions described in the
+previous section, we can get the following critical number for each
+category:
+
+-   Confidence in Mathematics: 2
+
+-   Persistence in Problem Solving: 2
+
+-   Growth Mindset: 2
+
+-   Interest in Mathematics: 1
+
+-   Relationship between Mathematics and Real World: 1
+
+-   Sense Making: 2
+
+-   Nature of the Answers: 3
+
+``` r
+responses_summary_part2_binary <- responses_summary_part2 %>%
+  mutate(
+    confidence = if_else(confidence <= 2, 0, 1),
+    persistence = if_else(persistence <= 2, 0, 1),
+    growth_mindset = if_else(growth_mindset <= 2, 0, 1),
+    sense = if_else(sense <= 2, 0, 1),
+    interest = if_else(interest <= 1, 0 ,1),
+    real_world = if_else(real_world <= 1, 0 ,1),
+    nature = if_else(nature <= 3, 0, 1)
+  ) %>%
+  select(-c("no_category"))
+```
+
+## Fitting a logistic regression model

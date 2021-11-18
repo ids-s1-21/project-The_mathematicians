@@ -1,0 +1,69 @@
+---
+title: "Analysis: Correlations between answers"
+author: "The Mathematicians"
+output: github_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+knitr::opts_knit$set(root.dir = "/cloud/project/data")
+```
+
+## Libraries
+
+```{r libraries}
+library(tidyverse)
+library(broom)
+library(dplyr)
+library(patchwork)
+library(tidymodels)
+```
+
+## Load the necesary data
+
+```{r load-data}
+responses_numeric1_filtered <- read_csv("responses_numeric1_filtered.csv")
+```
+
+
+
+## Average marks
+
+We are going to calculate the mark of each student and record their schools. Also, we are going to discard the schools where only a small number of people (n < 5, based on the data we get from the explotatory analysis) has filled in the survey because the conclusion drawn from these schools are less likely to be representative.
+
+Then, we are going to create a bar chart showing the average marks of all selected schools in order to compare them.
+
+```{r average-bar}
+responses_numeric1_filtered %>%
+  group_by(anon_id) %>%
+  summarise(
+    individual_mark = sum(mark, na.rm = TRUE),
+    programme_school_name = programme_school_name
+  ) %>%
+  distinct() %>%
+  filter(programme_school_name %in% c(
+    "School of Mathematics",
+    "School of Informatics",
+    "School of Economics",
+    "School of Physics and Astronomy",
+    "School of Philosophy, Psychology and Language Sciences"
+    )
+  ) %>%
+  group_by(programme_school_name) %>%
+  summarise(avg_mark = mean(individual_mark)) %>%
+  ggplot() +
+  geom_col(mapping = aes(x = reorder(programme_school_name, -avg_mark), y = avg_mark, fill = programme_school_name)) +
+  theme_minimal() +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(
+    x = "School",
+    y = "Average mark",
+    title = "Average marks in different school",
+    fill = "School name"
+  ) +
+  theme(axis.text.x = element_blank()) +
+  scale_fill_viridis_d()
+
+```
+
+## Rate of correctness for each individual questions in different schools
