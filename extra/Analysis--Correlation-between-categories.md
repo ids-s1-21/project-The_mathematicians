@@ -305,12 +305,25 @@ repetitively,
 
 ``` r
 model_fitting <- function(responses_binary, dep_var, indep_var) {
-  class(dep_var)
+  
+  
+  for (i in 1:8) {
+    if (colnames(responses_binary)[i] == dep_var) {
+      colnames(responses_binary)[i] <- "dep_var"
+      }
+  }  
+  for (j in 1:8) {
+    if (colnames(responses_binary)[j] == indep_var) {
+      colnames(responses_binary)[j] <- "indep_var"
+      }
+  }
+
   #Split the data to training data and testing data
   set.seed(9841)
   data_split <- initial_split(responses_binary, prop = 0.8)
   training_data = training(data_split)
   testing_data = testing(data_split)
+    
   
   #Create a recipe
   data_rec <- recipe(
@@ -333,3 +346,8 @@ model_fitting <- function(responses_binary, dep_var, indep_var) {
   return(data_fit)
 }
 ```
+
+## Creating AUC matrix
+
+We need to create an AUC matrix in order to find the best model (those
+with the highest roc).
