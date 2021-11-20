@@ -17,6 +17,7 @@ library(broom)
 library(dplyr)
 library(patchwork)
 library(tidymodels)
+library(gtools)
 ```
 
 ## Load the necesary data
@@ -99,91 +100,13 @@ print(correlation_matrix)
   
   - Nature of the Answers: 3  
   
-First we are going to test our model on "interest" and "real_world", where we decided to let "real_world" to be our outcome.
+## Writing the model-fitting function
 
-```{r change-to-(0,1)}
-interest_realworld_data <- responses_summary_part2 %>%
-  mutate(
-    interest = as_factor(interest),
-    real_world = as_factor(if_else(real_world <= 1, 0 ,1)),
-  ) %>%
-  select(interest, real_world)
-```
-Before creating a recipe, we first need to split the data into training data and testing data.
-
-```{r split-data}
-set.seed(9841)
-data_split <- initial_split(interest_realworld_data, prop = 0.8)
-training_data = training(data_split)
-testing_data = testing(data_split)
-```
-
-
-Then we start to create a data recipe and a corresponding model.
-
-```{r create-recipe}
-data_rec <- recipe(
-  real_world ~ interest,
-  data = training_data
-) %>%
-  step_dummy(all_nominal(), -all_outcomes())
-
-data_model <- logistic_reg() %>%
-  set_engine("glm")
-```
-
-After that, we make a workflow and fit the data to the model.
-
-```{r make-workflow}
-data_workflow <- workflow() %>%
-  add_model(data_model) %>%
-  add_recipe(data_rec)
-
-data_fit <- data_workflow %>%
-  fit(data = training_data)
-
-tidy(data_fit)
-```
-
-Then we are going to use this model to predict the outcome of testing data in order to see whether the model fit is good.
-
-```{r test-predict}
-data_predict <- predict(data_fit, testing_data, type = "prob") %>%
-  bind_cols(testing_data)
-data_predict %>%
-  select(.pred_0, .pred_1, real_world)
-```
-
-Also, we can make an roc curve for our model.
-
-```{r roc-curve}
-data_predict %>%
-  roc_auc(
-    truth = real_world,
-    .pred_1,
-    event_level = "second"
-  )
-
-```
-
-## Writing the model-fitting function (Not finished)
-
-As there are multiple groups of values that is needed to be fitted, we decided to create a function in order to prevent writing codes repetitively,
+As there are multiple groups of values that is needed to be fitted, we decided to create a function in order to prevent writing codes repetitively.
 
 ```{r function-creating}
-model_fitting <- function(responses_binary, dep_var, indep_var) {
-  
-  
-  for (i in 1:8) {
-    if (colnames(responses_binary)[i] == dep_var) {
-      colnames(responses_binary)[i] <- "dep_var"
-      }
-  }  
-  for (j in 1:8) {
-    if (colnames(responses_binary)[j] == indep_var) {
-      colnames(responses_binary)[j] <- "indep_var"
-      }
-  }
+
+model_fitting <- function(responses_binary) {
 
   #Split the data to training data and testing data
   set.seed(9841)
@@ -208,17 +131,164 @@ model_fitting <- function(responses_binary, dep_var, indep_var) {
   data_fit <- data_workflow %>%
     fit(data = training_data)
   
-  #Show the model (to be considered)
-  tidy(data_fit)
-  return(data_fit)
+  data_predict <- predict(data_fit, testing_data, type = "prob") %>%
+    bind_cols(testing_data)
+  
+  return(data_predict)
 }
 ```
 
-## Creating AUC matrix
+## Creating ROC matrix
 
-We need to create an AUC matrix in order to find the best model (those with the highest roc).
+We need to create an ROC matrix in order to find the models that are worth paying attention by comparing their roc.
 
 ```{r roc-matrix}
+roc_matrix <- data.frame(matrix(ncol = 8, nrow = 8))
+rownames(roc_matrix) <- colnames(responses_summary_part2[2:9])
+colnames(roc_matrix) <- colnames(responses_summary_part2[2:9])
+
+roc_matrix <- roc_matrix %>%
+  select(-c("no_category"))
+roc_matrix <- roc_matrix[-c(5),]
+
+variable_matrix <- permutations(
+  8, 
+  2, 
+  v = colnames(responses_summary_part2)[2:9], 
+  repeats.allowed = FALSE
+  ) %>%
+  as_tibble() %>%
+  filter(V1 != "no_category" & V2 != "no_category") %>%
+  as.matrix() %>%
+  t() 
+
+for (i in 1:42) {
+  variable_col <- variable_matrix[i]
+  responses_binary <- responses_summary_part2 %>%
+    ungroup() %>%
+    select(all_of(c(variable_matrix[1,i], variable_matrix[2,i]))) %>%
+    mutate(
+      dep_var = case_when(
+        as.logical(variable_matrix[1,i] == "confidence") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "growth_mindset") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "interest") ~ if_else(V1 <= 1, 0, 1),
+        as.logical(variable_matrix[1,i] == "nature") ~ if_else(V1 <= 3, 0, 1),
+        as.logical(variable_matrix[1,i] == "persistence") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "real_world") ~ if_else(V1 <= 1, 0, 1),
+        as.logical(variable_matrix[1,i] == "sense") ~ if_else(V1 <= 2, 0, 1)
+      )
+    ) %>%
+    mutate(dep_var = as_factor(dep_var)) %>%
+    mutate(indep_var = as_factor(V2)) 
+  roc_value <- model_fitting(responses_binary) %>%
+  roc_auc(
+    truth = dep_var,
+    .pred_1,
+    event_level = "second"
+  )
+  roc_matrix[variable_matrix[1,i], variable_matrix[2,i]] <- roc_value$.estimate
+}
+
+
+```
+
+## Find models that are worth paying attention
+
+First, let's take a look at the ROC matrix. The rows of the matrix represent dependent variables and rows represent independent variables.
+
+```{r show-matrix}
+print(roc_matrix)
+```
+  We can see that the area under the ROC curve when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the matrix. So we will take a look at the model.
+  
+```{r interest-confidence-model}
+
+responses_interest_confidence <- responses_summary_part2 %>%
+  ungroup() %>%
+  select(interest, confidence) %>%
+  mutate(
+    interest = as_factor(if_else(interest <= 1, 0, 1)),
+    confidence = as_factor(confidence)
+  ) 
+
+set.seed(9841)
+interest_confidence_split <- initial_split(responses_interest_confidence, prop = 0.8)
+interest_confidence_training_data = training(interest_confidence_split)
+interest_confidence_testing_data = testing(interest_confidence_split)
+interest_confidence_rec <- recipe(
+  interest ~ confidence,
+  data = interest_confidence_training_data
+) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+interest_confidence_model <- logistic_reg() %>%
+  set_engine("glm")
+interest_confidence_workflow <- workflow() %>%
+  add_model(interest_confidence_model) %>%
+  add_recipe(interest_confidence_rec)
+interest_confidence_fit <- interest_confidence_workflow %>%
+  fit(data = interest_confidence_training_data)
+tidy(interest_confidence_fit)
+```
+  
+  <Interpretation>
+  
+  Also, we could show its ROC to see how the sensitivity and specificity compares.
+
+```{r interest-confidence-roc}
+predict(interest_confidence_fit, interest_confidence_testing_data, type = "prob") %>%
+  bind_cols(interest_confidence_testing_data) %>%
+  roc_curve(
+    truth = interest,
+    .pred_1,
+    event_level = "second"
+  ) %>%
+  autoplot()
+
+```
+
+  In addition to these two variables, "interest" (dependent variable) and "sense" (independent variable) also shows a large area under the ROC. We will also take a look at their model.
+  
+```{r interest-sense-model}
+responses_interest_sense <- responses_summary_part2 %>%
+  ungroup() %>%
+  select(interest, sense) %>%
+  mutate(
+    interest = as_factor(if_else(interest <= 1, 0, 1)),
+    sense = as_factor(sense)
+  ) 
+
+set.seed(9841)
+interest_sense_split <- initial_split(responses_interest_sense, prop = 0.8)
+interest_sense_training_data = training(interest_sense_split)
+interest_sense_testing_data = testing(interest_sense_split)
+interest_sense_rec <- recipe(
+  interest ~ sense,
+  data = interest_sense_training_data
+) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+interest_sense_model <- logistic_reg() %>%
+  set_engine("glm")
+interest_sense_workflow <- workflow() %>%
+  add_model(interest_sense_model) %>%
+  add_recipe(interest_sense_rec)
+interest_sense_fit <- interest_sense_workflow %>%
+  fit(data = interest_sense_training_data)
+tidy(interest_sense_fit)
+```
+
+ <Interpretation>
+ 
+ Also, we could show its ROC to see how the sensitivity and specificity compares.
+
+```{r interest-sense-roc}
+predict(interest_sense_fit, interest_sense_testing_data, type = "prob") %>%
+  bind_cols(interest_sense_testing_data) %>%
+  roc_curve(
+    truth = interest,
+    .pred_1,
+    event_level = "second"
+  ) %>%
+  autoplot()
 
 
 ```
