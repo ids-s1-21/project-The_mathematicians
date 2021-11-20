@@ -169,4 +169,8 @@ plot_raw_2 + plot_percentage_2
 ```
 
 ![](Analysis--Expert-like-scores_files/figure-gfm/score-visualisation-2-1.png)<!-- -->
-<Insert Interpretation>
+The degree of correlation of a strongly agree by a student with respect
+to the agree of an expert is exactly the same of a normal agree, because
+the expert could be agreeing in any of the two ways, so the most
+sensible thing to do is to consider the expert agree as an average of a
+student strongly agree and a student normal agree.
