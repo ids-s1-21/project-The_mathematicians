@@ -109,4 +109,14 @@ plot_percentage_2 <- ggplot(data = responses_numeric2_summary_part1) +
   )
 plot_raw_2 + plot_percentage_2
 ```
-The degree of correlation of a strongly agree by a student with respect to the agree of an expert is exactly the same of a normal agree, because the expert could be agreeing in any of the two ways, so the most sensible thing to do is to consider the expert agree as an average of a student strongly agree and a student normal agree.
+
+As the answer from the experts comes in only two variants ("agree" and ""disagree"), we cannot know to what degree they actually agree with a choice like the one that's been given to the students: the students can in fact choose between "strongly disagree", "disagree", "be neutral", "agree", or "strongly agree" with the affirmation.
+The lack of perfect correspondence between the experts' answers and the students' ones led us to use the following method for grading the degree of agreement between students and experts (i.e. marking the students based on their answers, while considering the experts' answers as the correct ones).
+
+The degree of correlation of a "strongly agree" by a student with respect to the "agree" of the experts is exactly the same of a normal "agree" of a student, because the experts could be agreeing in any of the two ways, so the most sensible thing to do is to consider the experts' "agree" as a general "agree" that includes both a student's "strongly agree" and a student's normal "agree".
+Because of this, when we find that a student has responded the same way as the experts did (regardless if with or without the word "strongly"), we will add 1 point for that question to the score. 
+If the student decides to hold a neutral stance or disagrees with the experts (always regardless of the presence of the word "strongly"), then we will assign 0 points for that question, as the student will have failed to reach the right answer in any of these cases.
+
+Because of the aforementioned reasons, we will use the first type of visualisation out of the two that we have shown, considering strongly and normal agreeing/disagreeing as the same type of answer in relation with the experts' answer, which is in fact a more realistic way to analyse the data.
+
+This choice is also supported by the research/article <insert link> by <research team/professor's name>
