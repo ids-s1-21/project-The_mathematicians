@@ -1,7 +1,6 @@
 ---
-title: "Presentation title"
-subtitle: "Presentation subtitle (if any)"
-author: "Team name <br> Names of team members"
+title: "Student's Beliefs about Mathematics"
+author: "The Mathematicians <br> Alfin Hou, Pietro Rossi and Sandy Braun (Alphabetical Order)"
 institute: "University of Edinburgh"
 date: "`r Sys.Date()`"
 output:
@@ -22,15 +21,21 @@ library(tidymodels)
 library(palmerpenguins)
 library(knitr)
 library(xaringanthemer)
+library(patchwork)
+library(gtools)
+library(broom)
+library(dplyr)
 ```
 
 ```{r setup, include=FALSE}
 # For better figure resolution
 knitr::opts_chunk$set(fig.retina = 3, dpi = 300, fig.width = 6, fig.asp = 0.618, out.width = "80%")
+knitr::opts_knit$set(root.dir = "/cloud/project/data")
 ```
 
 ```{r load-data, include=FALSE}
-# Load your data here
+responses_numeric1_filtered <- read_csv("responses_numeric1_filtered.csv")
+responses_numeric2_filtered <- read_csv("responses_numeric2_filtered.csv")
 ```
 
 ```{r include=FALSE}
