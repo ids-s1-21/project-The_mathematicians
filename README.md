@@ -5,38 +5,38 @@ by The Mathematicians
 ## Summary
 
 We conduct the project because we want to investigate students’ beliefs
-about mathematics. And in detail, we want to research into the following
+about Mathematics. And in detail, we want to research into the following
 questions:  
 1. How are answers distributed between students in different schools &
 genders?  
-2. Are there any correlation between answers?  
-3. How do the answers of students differ from expected answers?
+2. Are there any correlations between answers?  
+3. How do the answers of students differ from the expected answers?
 
 The data we used to analyse comes from an anonymous survey regarding
 “Beliefs about Mathematics” which was completed by students of the
 University of Edinburgh for the academic year 2019-2020. The survey has
 32 questions (one of them is a filter question, so only 31 questions
-actually investigates the beliefs of students) We mainly used three data
+actually investigate the beliefs of students). We mainly used three data
 sets during the analysis. They are results of the survey, gender, and
 the experts’ answers for each question. All these data sets are
 anonymous and each student is given an anonymous ID.
 
 Before we approach these questions, we tried two different methods of
 assigning a numeric mark/score to categorical answers such as “Agree”
-and “Disagree”. We tried two methods:  
+and “Disagree”. The methods are the following:  
 1. Each student will get 1 mark for answering the question at the same
 direction as the experts (e.g. “Agree” and “Strongly Agree” is at the
 same direction as “Agree”) and 0 otherwise.  
 2. For questions of which expected answers are “Agree”, we could give
 marks for “Strongly Agree”, “Agree”, “Neutral”, “Disagree” and “Strongly
-Disagree” as followed: 2, 1, 0, -1, -2. vice versa.
+Disagree” as follows: 2, 1, 0, -1, -2. vice versa.
 
-We used both methods on the 3rd questions and it turned out that the
-first method is better because as the answer from the experts comes in
-only two variants (“agree” and ““disagree”), we cannot know to what
+We used both methods in question 3 and it turned out that the first
+method is better because as the answer from the experts comes in only
+two variants (“agree” and ““disagree”), and we cannot know to what
 degree they actually agree with a choice like the one that’s been given
-to the students (So doesn’t make sense that “Strongly Agree” necessarily
-earns more marks than “Agree”).
+to the students (So it doesn’t make sense that “Strongly Agree”
+necessarily earns more marks than “Agree”).
 
 For the third question, using the first method, our visualisation is
 shown as followed.
@@ -45,8 +45,8 @@ shown as followed.
 
 For the first question, our analysis shows that, first of all, the
 average number of “correct answers” (answers that are in the same
-direction as the experts’ answer) ranked by schools is shown as
-followed: - School of Mathematics (22.7)  
+direction as the experts’ answer) ranked by schools is shown as follows:
+- School of Mathematics (22.7)  
 - School of Physics and Astronomy (21.8)  
 - School of Informatics (20.5)  
 - School of Philosophy, Psychology and Language Science (19.8)  
@@ -66,7 +66,7 @@ concepts) while males answered better in questions related to
 
 For the second question, first of all, we put questions into different
 categories based on the research by Code et al. (See References). The
-categories and their corresponding questions are listed as followed:  
+categories and their corresponding questions are listed below:  
 - Persistence in Problem Solving: Questions No.8, 10, 24, 29  
 - Growth Mindset: Question No.5, 6, 22, 31  
 - Interest in Mathematics: Question No.12, 26, 32  
@@ -77,7 +77,7 @@ categories and their corresponding questions are listed as followed:
 - No category: Question No.25, 27
 
 After that, we tested the linear correlation of each pair of the
-categories using pearson correlation coefficient. However, there are no
+categories using Pearson correlation coefficient. However, there are no
 pair of categories that can get a coefficient greater than 0.4. So it
 means that these categories don’t have significant linear
 correlations.  
@@ -86,8 +86,8 @@ pair of the categories. In order to apply logistic regression, we
 decided that for each category, we will calculate a “critical” number
 such that when this category is a dependent variable, the total mark
 students obtained from questions in this category will be converted to 0
-if their raw total marks are lower than the number. Otherwise they will
-be 1.
+if their raw total marks are lower than the number, otherwise it will be
+1.
 
 Then, we fit a logistic regression model for each pair of these
 categories and calculated their AUCs to assess how well these models
@@ -104,10 +104,7 @@ Our presentation can be found [here](presentation/presentation.html).
 
 ## Data
 
-Include a citation for your data here. See
-<http://libraryguides.vu.edu.au/c.php?g=386501&p=4347840> for guidance
-on proper citation for datasets. If you got your data off the web, make
-sure to note the retrieval date.
+Data provided by Dr. George Kinnear
 
 ## References
 
