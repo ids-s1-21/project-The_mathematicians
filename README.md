@@ -21,6 +21,28 @@ sets during the analysis. They are results of the survey, gender, and
 the experts’ answers for each question. All these data sets are
 anonymous and each student is given an anonymous ID.
 
+Before we approach these questions, we tried two different methods of
+assigning a numeric mark/score to categorical answers such as “Agree”
+and “Disagree”. We tried two methods:  
+1. Each student will get 1 mark for answering the question at the same
+direction as the experts (e.g. “Agree” and “Strongly Agree” is at the
+same direction as “Agree”) and 0 otherwise.  
+2. For questions of which expected answers are “Agree”, we could give
+marks for “Strongly Agree”, “Agree”, “Neutral”, “Disagree” and “Strongly
+Disagree” as followed: 2, 1, 0, -1, -2. vice versa.
+
+We used both methods on the 3rd questions and it turned out that the
+first method is better because as the answer from the experts comes in
+only two variants (“agree” and ““disagree”), we cannot know to what
+degree they actually agree with a choice like the one that’s been given
+to the students (So doesn’t make sense that “Strongly Agree” necessarily
+earns more marks than “Agree”).
+
+For the third question, using the first method, our visualisation is
+shown as followed.
+
+![](README_files/figure-gfm/score-visualisation-1-1.png)<!-- -->
+
 For the first question, our analysis shows that, first of all, the
 average number of “correct answers” (answers that are in the same
 direction as the experts’ answer) ranked by schools is shown as
@@ -42,25 +64,39 @@ answers to mathematical questions are just numbers or reveals deeper
 concepts) while males answered better in questions related to
 “Persistence in Problem Solving”.
 
-## …Not Finished Yet…
+For the second question, first of all, we put questions into different
+categories based on the research by Code et al. (See References). The
+categories and their corresponding questions are listed as followed:  
+- Persistence in Problem Solving: Questions No.8, 10, 24, 29  
+- Growth Mindset: Question No.5, 6, 22, 31  
+- Interest in Mathematics: Question No.12, 26, 32  
+- Relationship between Mathematics and Real World: Question No.13, 15,
+21  
+- Sense Making: Question No.3, 4, 11, 18, 23  
+- Nature of the Answers: Question No.2, 7, 9, 16, 28, 30  
+- No category: Question No.25, 27
 
-Write-up of your project and findings go here. Think of this as the text
-of your presentation. The length should be roughly 5 minutes when read
-out loud. Although pacing varies, a 5-minute speech is roughly 750
-words. To use the word count addin, select the text you want to count
-the words of (probably this is the Summary section of this document, go
-to Addins, and select the `Word count` addin). This addin counts words
-using two different algorithms, but the results should be similar and as
-long as you’re in the ballpark of 750 words, you’re good! The addin will
-ignore code chunks and only count the words in prose.
+After that, we tested the linear correlation of each pair of the
+categories using pearson correlation coefficient. However, there are no
+pair of categories that can get a coefficient greater than 0.4. So it
+means that these categories don’t have significant linear
+correlations.  
+As a result, we then tried to fit a logistic regression model to each
+pair of the categories. In order to apply logistic regression, we
+decided that for each category, we will calculate a “critical” number
+such that when this category is a dependent variable, the total mark
+students obtained from questions in this category will be converted to 0
+if their raw total marks are lower than the number. Otherwise they will
+be 1.
 
-You can also load your data here and present any analysis results /
-plots, but I strongly urge you to keep that to a minimum (maybe only the
-most important graphic, if you have one you can choose). And make sure
-to hide your code with `echo = FALSE` unless the point you are trying to
-make is about the code itself. Your results with proper output and
-graphics go in your presentation, this space is for a brief summary of
-your project.
+Then, we fit a logistic regression model for each pair of these
+categories and calculated their AUCs to assess how well these models
+perform. The results show that the model relating “Interest” (dependent)
+and “Confidence” (independent) has the highest AUC (0.8321314), meaning
+it’s doing the best. The model generally shows that if a student answers
+more questions in the category “Confidence” correctly, there is a higher
+possibility for him to answer more than 1/3 questions in the category
+“Interest” correctly.
 
 ## Presentation
 
