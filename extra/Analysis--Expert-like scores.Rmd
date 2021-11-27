@@ -52,7 +52,7 @@ responses_numeric1_summary_part1 <- responses_numeric1_part1 %>%
   group_by(anon_id) %>%
   summarise(raw_score = sum(mark), percentage_score = sum(mark)/31)
 plot_raw_1 <- ggplot(data = responses_numeric1_summary_part1) +
-  geom_histogram(mapping = aes(x = raw_score), binwidth = 3) +
+  geom_bar(mapping = aes(x = raw_score), binwidth = 3) +
   theme_minimal() +
   labs(
     title = "Distribution of raw score",

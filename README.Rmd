@@ -96,3 +96,4 @@ Code, W., Merchant, S., Maciejewski, W., Thomas, M., & Lo, J. (2016). The Mathem
 
 Liddell, T. M., & Kruschke, J. K. (2018). Analyzing ordinal data with metric models: What could possibly go wrong? Journal of Experimental Social Psychology, 79, 328–348. https://doi.org/10.1016/J.JESP.2018.08.009
 
+
