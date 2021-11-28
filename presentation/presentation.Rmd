@@ -94,6 +94,8 @@ Before we perform analysis, we need to transfer answers such as "Agree", "Disagr
 
 # Method decision
 
+--
+
 We decided to use the first method because:  
 
 --
@@ -109,6 +111,8 @@ class: inverse, middle, center
 ---
 
 # How do the answers of students differ from the expected answers?
+
+--
 
 - Based on the first method of converting categorical answers to numeric ones, we generated an "expert-like score" by calculating the sum of mark for each student to show how their answers differ from the expected answers.
 
@@ -135,56 +139,159 @@ include_graphics("https://i.postimg.cc/4d8J4zbM/file-show.png")
 
 # How are answers distributed between students in different schools & genders?
 
-You can use plain text
+---
 
-- or bullet points
+# Average marks for different schools*
 
-.pull-left[
-or text in two columns $^*$
-]
-.pull-right[
-- like
-- this
-]
+--
+
+```{r plot-for-analysis-2-schools-average, echo = FALSE, out.height = "80%", out.width = "60%"}
+responses_numeric1_filtered %>%
+  group_by(anon_id) %>%
+  summarise(
+    individual_mark = sum(mark, na.rm = TRUE),
+    programme_school_name = programme_school_name,
+    .groups = "keep"
+  ) %>%
+  distinct() %>%
+  filter(programme_school_name %in% c(
+    "School of Mathematics",
+    "School of Informatics",
+    "School of Economics",
+    "School of Physics and Astronomy",
+    "School of Philosophy, Psychology and Language Sciences"
+    )
+  ) %>%
+  group_by(programme_school_name) %>%
+  summarise(avg_mark = mean(individual_mark)) %>%
+  ggplot(mapping = aes(x = reorder(programme_school_name, avg_mark), y = avg_mark, fill = programme_school_name)) +
+  geom_col() +
+  theme_minimal() +
+  scale_x_discrete(guide = guide_axis(n.dodge=2)) +
+  labs(
+    x = "School",
+    y = "Average mark",
+    title = "Average marks in different school",
+    fill = "School name"
+  ) +
+  theme(axis.text.x = element_blank()) +
+  scale_fill_viridis_d() +
+  geom_text(mapping = aes(label = signif(avg_mark, digits = 3)), size = 3, position = position_stack(vjust = 1.1))
+```
 
 .footnote[
-[*] And add footnotes
+[*] some schools are removed because number of students from this school is too few to draw representative results.
 ]
 
 ---
 
-# Code
+# Analysis for the rate of correctness for each question 
 
-```{r boring-regression}
-# a boring regression
-model <- lm(dist ~ speed, data = cars)
-tidy(model)
-glance(model)
+--
+
+.pull-left[
+- They have differences in their average marks.
+- They have similar patterns of rates of correctness.
+]
+
+.pull-right[
+
+```{r plot-for-analysis-2-schools-question, echo = FALSE, warning = FALSE, out.width = "300%", out.height = "360%"}
+responses_numeric1_filtered %>%
+  filter(programme_school_name %in% c(
+    "School of Mathematics",
+    "School of Informatics",
+    "School of Economics",
+    "School of Physics and Astronomy",
+    "School of Philosophy, Psychology and Language Sciences"
+    )
+  ) %>%
+  mutate(programme_school_name = if_else(
+    programme_school_name == "School of Philosophy, Psychology and Language Sciences",
+    "School of PPL",
+    programme_school_name
+    )) %>%
+  group_by(qnum, programme_school_name) %>%
+  summarise(
+    percentage_correctness = sum(mark) / n() * 100,
+    .groups = "keep"
+    ) %>%
+  ggplot(mapping = aes(x = qnum, y = percentage_correctness)) +
+  geom_col() +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 114)) +
+  labs(
+    x = "School",
+    y = "Question No.",
+    title = "Rate of correctness in different school",
+    fill = "School name"
+  ) +
+  facet_wrap(programme_school_name ~ ., ncol = 2, scales = "free") 
+```
+]
+---
+
+# Average marks in different genders
+
+--
+
+```{r plot-for-analysis-2-genders-average, echo = FALSE, out.width = "60%", out.height = "80%"}
+responses_numeric1_filtered %>%
+  group_by(anon_id) %>%
+  summarise(
+    individual_mark = sum(mark, na.rm = TRUE),
+    gender = gender,
+    .groups = "keep"
+  ) %>%
+  distinct() %>%
+  filter(is.na(gender) == FALSE) %>%
+  group_by(gender) %>%
+  summarise(avg_mark = mean(individual_mark)) %>%
+  ggplot(mapping = aes(x = reorder(gender, -avg_mark), y = avg_mark, fill = gender)) +
+  geom_col() +
+  theme_minimal() +
+  labs(
+    x = "Gender",
+    y = "Average mark",
+    title = "Average marks in different gender",
+  ) +
+  geom_text(mapping = aes(label = signif(avg_mark, digits = 3)), size = 3, position = position_stack(vjust = 1.1))
 ```
 
 ---
 
-# Plots
+# Analysis for the rate of correctness for each gender
 
-```{r recode-species, echo = FALSE}
-# In this chunk I'm doing a bunch of analysis that I don't want to present 
-# in my slides. But I need the resulting data frame for a plot I want to present.
-iris_modified <- iris %>%
-  mutate(Species = fct_other(Species, keep = "setosa"))
-```
+--
+.pull-text[
+- They have similar average marks.
+- However, for some questions, males answered better while for some others, females answered better.
+]
 
-```{r plot-iris, echo = FALSE}
-# Code hidden with echo = FALSE
-# Uses modified iris dataset from previous chunk
-# Play around with height and width until you're happy with the look
-ggplot(data = iris_modified, mapping = aes(x = Sepal.Width, y = Sepal.Length, color = Species)) +
-  geom_point() + 
-  theme_minimal() # theme options: https://ggplot2.tidyverse.org/reference/ggtheme.html
+```{r plot-for-analysis-2-genders-question, echo = FALSE, warning = FALSE, out.width = "50%", out.height = "80%"}
+responses_numeric1_filtered %>%
+  filter(is.na(gender) == FALSE) %>%
+  group_by(qnum, gender) %>%
+  summarise(
+    percentage_correctness = sum(mark) / n() * 100,
+    .groups = "keep"
+    ) %>%
+  ggplot(mapping = aes(x = as.factor(qnum), y = percentage_correctness)) +
+  geom_col() +
+  theme_minimal() +
+  scale_y_continuous(limits = c(0, 114)) +
+  labs(
+    x = "Question No.",
+    y = "Rate of correctness",
+    title = "Rate of correctness in different school",
+  ) +
+  facet_wrap(gender ~ ., ncol = 1, scales = "free") +
+  geom_text(mapping = aes(label = signif(percentage_correctness, digits = 3)), size = 2, position = position_stack(vjust = 1.2)) 
 ```
 
 ---
 
-## Plot and text
+# Plot and text
 
 .pull-left[
 - Some text

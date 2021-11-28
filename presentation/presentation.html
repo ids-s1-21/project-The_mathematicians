@@ -80,6 +80,8 @@ Before we perform analysis, we need to transfer answers such as "Agree", "Disagr
 
 # Method decision
 
+--
+
 We decided to use the first method because:  
 
 --
@@ -95,6 +97,8 @@ class: inverse, middle, center
 ---
 
 # How do the answers of students differ from the expected answers?
+
+--
 
 - Based on the first method of converting categorical answers to numeric ones, we generated an "expert-like score" by calculating the sum of mark for each student to show how their answers differ from the expected answers.
 
@@ -119,64 +123,56 @@ class: inverse, middle, center
 
 # How are answers distributed between students in different schools &amp; genders?
 
-You can use plain text
+---
 
-- or bullet points
+# Average marks for different schools*
 
-.pull-left[
-or text in two columns `\(^*\)`
-]
-.pull-right[
-- like
-- this
-]
+--
+
+&lt;img src="presentation_files/figure-html/plot-for-analysis-2-schools-average-1.png" width="60%" height="80%" /&gt;
 
 .footnote[
-[*] And add footnotes
+[*] some schools are removed because number of students from this school is too few to draw representative results.
 ]
 
 ---
 
-# Code
+# Analysis for the rate of correctness for each question 
 
+--
 
-```r
-# a boring regression
-model &lt;- lm(dist ~ speed, data = cars)
-tidy(model)
-```
+.pull-left[
+- They have differences in their average marks.
+- They have similar patterns of rates of correctness.
+]
 
-```
-## # A tibble: 2 × 5
-##   term        estimate std.error statistic  p.value
-##   &lt;chr&gt;          &lt;dbl&gt;     &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt;
-## 1 (Intercept)   -17.6      6.76      -2.60 1.23e- 2
-## 2 speed           3.93     0.416      9.46 1.49e-12
-```
+.pull-right[
 
-```r
-glance(model)
-```
+&lt;img src="presentation_files/figure-html/plot-for-analysis-2-schools-question-1.png" width="300%" height="360%" /&gt;
+]
+---
 
-```
-## # A tibble: 1 × 12
-##   r.squared adj.r.squared sigma statistic  p.value    df logLik   AIC   BIC
-##       &lt;dbl&gt;         &lt;dbl&gt; &lt;dbl&gt;     &lt;dbl&gt;    &lt;dbl&gt; &lt;dbl&gt;  &lt;dbl&gt; &lt;dbl&gt; &lt;dbl&gt;
-## 1     0.651         0.644  15.4      89.6 1.49e-12     1  -207.  419.  425.
-## # … with 3 more variables: deviance &lt;dbl&gt;, df.residual &lt;int&gt;, nobs &lt;int&gt;
-```
+# Average marks in different genders
+
+--
+
+&lt;img src="presentation_files/figure-html/plot-for-analysis-2-genders-average-1.png" width="60%" height="80%" /&gt;
 
 ---
 
-# Plots
+# Analysis for the rate of correctness for each gender
 
+--
+.pull-text[
+- They have similar average marks.
+- However, for some questions, males answered better while for some others, females answered better.
+]
 
-
-&lt;img src="presentation_files/figure-html/plot-iris-1.png" width="80%" /&gt;
+&lt;img src="presentation_files/figure-html/plot-for-analysis-2-genders-question-1.png" width="50%" height="80%" /&gt;
 
 ---
 
-## Plot and text
+# Plot and text
 
 .pull-left[
 - Some text
