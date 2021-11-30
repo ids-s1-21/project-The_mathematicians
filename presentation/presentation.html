@@ -96,9 +96,13 @@ class: inverse, middle, center
 
 ---
 
+class: inverse, middle, center
+
 # How do the answers of students differ from the expected answers?
 
---
+---
+
+# Method 
 
 - Based on the first method of converting categorical answers to numeric ones, we generated an "expert-like score" by calculating the sum of mark for each student to show how their answers differ from the expected answers.
 
@@ -120,6 +124,8 @@ class: inverse, middle, center
 ]
 
 ---
+
+class: inverse, middle, center
 
 # How are answers distributed between students in different schools &amp; genders?
 
@@ -171,6 +177,57 @@ class: inverse, middle, center
 &lt;img src="presentation_files/figure-html/plot-for-analysis-2-genders-question-1.png" width="50%" height="80%" /&gt;
 
 ---
+
+# Question Comparison
+
+We select the questions where there are significant differences between female scores and make scores.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; qnum &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; male_mark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; female_mark &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; difference &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 30 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 67.67372 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 79.02439 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -11.350674 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 28 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 67.06949 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 77.07317 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; -10.003684 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 8 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 57.70393 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 48.29268 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 9.411245 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 27 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 66.76737 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 54.63415 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 12.133225 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+--
+
+Question 30: Showing intermediate steps for a math problem is not important as long as I can find the correct answer. (Disagree)    
+Question 28: All I need to solve a math problem is to have the necessary formulas. (Disagree)  
+Question 8: If I am stuck on a math problem for more than ten minutes, I give up or get help from someone else. (Disagree)    
+Question 27: I think it is unfair to expect me to solve a math problem that is not similar to any example given in class or the textbook, even if the topic has been covered in the course. (Disagree)  
+
+---
+
 
 class: inverse, middle, center
 
@@ -327,7 +384,6 @@ Critical Number are shown as follows:
   
   - Nature of the Answers: 3  
 
-
 ---
 
 # Logistic Regression
@@ -337,6 +393,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; confidence &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; growth_mindset &lt;/th&gt;
    &lt;th style="text-align:right;"&gt; interest &lt;/th&gt;
@@ -348,6 +405,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; confidence &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5559330 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6503623 &lt;/td&gt;
@@ -357,6 +415,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.5903533 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; growth_mindset &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6287594 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6456767 &lt;/td&gt;
@@ -366,6 +425,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.6139568 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; interest &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.8321314 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5228365 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
@@ -375,6 +435,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.7027244 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; nature &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6053276 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6169626 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5979792 &lt;/td&gt;
@@ -384,6 +445,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.6429884 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; persistence &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6839945 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5013680 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5738714 &lt;/td&gt;
@@ -393,6 +455,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.5875513 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; real_world &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5038402 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6349206 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6740911 &lt;/td&gt;
@@ -402,6 +465,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
    &lt;td style="text-align:right;"&gt; 0.6833077 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; sense &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6291062 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.6172651 &lt;/td&gt;
    &lt;td style="text-align:right;"&gt; 0.5832697 &lt;/td&gt;
@@ -415,33 +479,52 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
 
 In this table, rows represent dependent variables and columns represent independent variables.  
 
-We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table So we will take a look at the model.
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. So, we will take a look at the model.
 
 ---
 
 # Interest ~ Confidence Model
 
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:left;"&gt; term &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; estimate &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; std.error &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; statistic &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; p.value &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; (Intercept) &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.253635 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2874868 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.8822492 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3776421 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; confidence &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.626970 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1220034 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 5.1389567 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0000003 &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
 
+`\(p\)` is the probability that at least `\(2/3\)` of questions in the category "Interest" are answered correctly, `\(x\)` is the number of questions answered correctly in the category "Confidence".
 
+`$$log(\frac{p}{1-p}) = 0.626970x + 0.253635$$`
 ---
 
-# Math Expressions
+# ROC curve for the model
 
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. &amp;#36;\alpha+\beta$ renders `\(\alpha+\beta\)`. You can use the display style with double dollar signs:
+&lt;img src="presentation_files/figure-html/roc-for-analysis3-logistic-1.png" width="80%" /&gt;
 
-```
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
-
-`$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$`
-
-Limitations:
-
-1. The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-1. There should not be spaces after the opening `$` or before the closing `$`.
-
-1. Math does not work on the title slide (see [#61](https://github.com/yihui/xaringan/issues/61) for a workaround).
+.pull-text[
+The AUC is the area under this curve, and higher AUC in short, represents better prediction made by the model.
+]
 
 ---
 

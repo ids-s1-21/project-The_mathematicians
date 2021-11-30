@@ -111,9 +111,13 @@ class: inverse, middle, center
 
 ---
 
+class: inverse, middle, center
+
 # How do the answers of students differ from the expected answers?
 
---
+---
+
+# Method 
 
 - Based on the first method of converting categorical answers to numeric ones, we generated an "expert-like score" by calculating the sum of mark for each student to show how their answers differ from the expected answers.
 
@@ -137,6 +141,8 @@ include_graphics("https://i.postimg.cc/4d8J4zbM/file-show.png")
 ]
 
 ---
+
+class: inverse, middle, center
 
 # How are answers distributed between students in different schools & genders?
 
@@ -292,6 +298,48 @@ responses_numeric1_filtered %>%
 
 ---
 
+# Question Comparison
+
+We select the questions where there are significant differences between female scores and make scores.
+
+```{r table-for-analysis-2-genders-question, echo = FALSE, warning = FALSE}
+responses_female <- responses_numeric1_filtered %>%
+  filter(is.na(gender) == FALSE) %>%
+  group_by(qnum, gender) %>%
+  summarise(
+    percentage_correctness = sum(mark) / n() * 100,
+    .groups = "keep"
+    ) %>%
+  filter(gender == "F")
+responses_male <- responses_numeric1_filtered %>%
+  filter(is.na(gender) == FALSE) %>%
+  group_by(qnum, gender) %>%
+  summarise(
+    percentage_correctness = sum(mark) / n() * 100,
+    .groups = "keep"
+    ) %>%
+  filter(gender == "M")
+difference_marks <- tibble(
+  qnum = responses_male$qnum,
+  male_mark = responses_male$percentage_correctness,
+  female_mark = responses_female$percentage_correctness
+) %>%
+  mutate(difference = male_mark - female_mark) %>%
+  arrange(difference)
+difference_marks <- rbind(slice(difference_marks, 1:2), slice(difference_marks, 30:31))
+kable(difference_marks, format = "html")
+```
+
+--
+
+Question 30: Showing intermediate steps for a math problem is not important as long as I can find the correct answer. (Disagree)    
+Question 28: All I need to solve a math problem is to have the necessary formulas. (Disagree)  
+Question 8: If I am stuck on a math problem for more than ten minutes, I give up or get help from someone else. (Disagree)    
+Question 27: I think it is unfair to expect me to solve a math problem that is not similar to any example given in class or the textbook, even if the topic has been covered in the course. (Disagree)  
+
+---
+
+
 class: inverse, middle, center
 
 # Are there any correlations between answers/groups of answers?
@@ -394,47 +442,151 @@ Critical Number are shown as follows:
   
   - Nature of the Answers: 3  
 
-
 ---
 
 # Logistic Regression
 
 Then we fit a model for each pair of the categories and calculate the AUC for each model fitted.
 
-```{r table-for-analysis3-logistic, echo = FALSE}
-kable(roc_matrix, format = "html")
+```{r table-for-analysis3-logistic, echo = FALSE, warning = FALSE}
+model_fitting <- function(responses_binary) {
 
+  #Split the data to training data and testing data
+  set.seed(9841)
+  data_split <- initial_split(responses_binary, prop = 0.8)
+  training_data = training(data_split)
+  testing_data = testing(data_split)
+    
+  
+  #Create a recipe
+  data_rec <- recipe(
+    dep_var ~ indep_var,
+    data = training_data
+  ) %>%
+    step_dummy(all_nominal(), -all_outcomes())
+  data_model <- logistic_reg() %>%
+    set_engine("glm")
+  
+  #Create workflow
+  data_workflow <- workflow() %>%
+    add_model(data_model) %>%
+    add_recipe(data_rec)
+  data_fit <- data_workflow %>%
+    fit(data = training_data)
+  
+  data_predict <- predict(data_fit, testing_data, type = "prob") %>%
+    bind_cols(testing_data)
+  
+  return(data_predict)
+}
+roc_matrix <- data.frame(matrix(ncol = 8, nrow = 8))
+rownames(roc_matrix) <- colnames(responses_summary_part2[2:9])
+colnames(roc_matrix) <- colnames(responses_summary_part2[2:9])
+
+roc_matrix <- roc_matrix %>%
+  select(-c("no_category"))
+roc_matrix <- roc_matrix[-c(5),]
+
+variable_matrix <- permutations(
+  8, 
+  2, 
+  v = colnames(responses_summary_part2)[2:9], 
+  repeats.allowed = FALSE
+  ) %>%
+  as_tibble() %>%
+  filter(V1 != "no_category" & V2 != "no_category") %>%
+  as.matrix() %>%
+  t() 
+
+for (i in 1:42) {
+  variable_col <- variable_matrix[i]
+  responses_binary <- responses_summary_part2 %>%
+    ungroup() %>%
+    select(all_of(c(variable_matrix[1,i], variable_matrix[2,i]))) %>%
+    mutate(
+      dep_var = case_when(
+        as.logical(variable_matrix[1,i] == "confidence") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "growth_mindset") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "interest") ~ if_else(V1 <= 1, 0, 1),
+        as.logical(variable_matrix[1,i] == "nature") ~ if_else(V1 <= 3, 0, 1),
+        as.logical(variable_matrix[1,i] == "persistence") ~ if_else(V1 <= 2, 0, 1),
+        as.logical(variable_matrix[1,i] == "real_world") ~ if_else(V1 <= 1, 0, 1),
+        as.logical(variable_matrix[1,i] == "sense") ~ if_else(V1 <= 2, 0, 1)
+      )
+    ) %>%
+    mutate(dep_var = as_factor(dep_var)) %>%
+    mutate(indep_var = as_factor(V2)) 
+  roc_value <- model_fitting(responses_binary) %>%
+  roc_auc(
+    truth = dep_var,
+    .pred_1,
+    event_level = "second"
+  )
+  roc_matrix[variable_matrix[1,i], variable_matrix[2,i]] <- roc_value$.estimate
+}
+
+kable(roc_matrix, format = "html")
 ```
 
 In this table, rows represent dependent variables and columns represent independent variables.  
 
-We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table So we will take a look at the model.
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. So, we will take a look at the model.
 
 ---
 
 # Interest ~ Confidence Model
 
+```{r model-for-analysis3-logistic, echo = FALSE}
+responses_interest_confidence <- responses_summary_part2 %>%
+  ungroup() %>%
+  select(interest, confidence) %>%
+  mutate(
+    interest = as_factor(if_else(interest <= 1, 0, 1)),
+    confidence = confidence
+  ) 
 
+set.seed(9841)
+interest_confidence_split <- initial_split(responses_interest_confidence, prop = 0.8)
+interest_confidence_training_data = training(interest_confidence_split)
+interest_confidence_testing_data = testing(interest_confidence_split)
+interest_confidence_rec <- recipe(
+  interest ~ confidence,
+  data = interest_confidence_training_data
+) %>%
+  step_dummy(all_nominal(), -all_outcomes())
+interest_confidence_model <- logistic_reg() %>%
+  set_engine("glm")
+interest_confidence_workflow <- workflow() %>%
+  add_model(interest_confidence_model) %>%
+  add_recipe(interest_confidence_rec)
+interest_confidence_fit <- interest_confidence_workflow %>%
+  fit(data = interest_confidence_training_data)
+kable(tidy(interest_confidence_fit), format = "html")
 
+```
+
+$p$ is the probability that at least $2/3$ of questions in the category "Interest" are answered correctly, $x$ is the number of questions answered correctly in the category "Confidence".
+
+$$log(\frac{p}{1-p}) = 0.626970x + 0.253635$$
 ---
 
-# Math Expressions
+# ROC curve for the model
 
-You can write LaTeX math expressions inside a pair of dollar signs, e.g. &#36;\alpha+\beta$ renders $\alpha+\beta$. You can use the display style with double dollar signs:
+```{r roc-for-analysis3-logistic, echo = FALSE}
+predict(interest_confidence_fit, interest_confidence_testing_data, type = "prob") %>%
+  bind_cols(interest_confidence_testing_data) %>%
+  roc_curve(
+    truth = interest,
+    .pred_1,
+    event_level = "second"
+  ) %>%
+  autoplot()
 
 ```
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-```
 
-$$\bar{X}=\frac{1}{n}\sum_{i=1}^nX_i$$
-
-Limitations:
-
-1. The source code of a LaTeX math expression must be in one line, unless it is inside a pair of double dollar signs, in which case the starting `$$` must appear in the very beginning of a line, followed immediately by a non-space character, and the ending `$$` must be at the end of a line, led by a non-space character;
-
-1. There should not be spaces after the opening `$` or before the closing `$`.
-
-1. Math does not work on the title slide (see [#61](https://github.com/yihui/xaringan/issues/61) for a workaround).
+.pull-text[
+The AUC is the area under this curve, and higher AUC in short, represents better prediction made by the model.
+]
 
 ---
 
