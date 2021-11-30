@@ -1,7 +1,7 @@
 ---
-title: "Student's Beliefs about Mathematics"
+title: "Students' Beliefs about Mathematics"
 author: "The Mathematicians <br> Alfin Hou, Pietro Rossi and Sandy Braun"
-institute: "University of Edinburgh"
+institute: "The University of Edinburgh"
 date: "`r Sys.Date()`"
 output:
   xaringan::moon_reader:
@@ -66,12 +66,12 @@ We will be investigating certain beliefs of students towards Mathematics using m
 
 ---
 
-# Our dats sets
+# Our data sets
 
 The result of an anonymous survey regarding "Beliefs about Mathematics" which was completed by students of the University of Edinburgh for the academic year 2019-2020 (Data set obtained from Dr. George Kinnear).  
 
 --
-  - 32 questions in total (One filter question whose mark doesn't count)
+  - 32 questions in total (one filter question whose mark doesn't count)
   
   - We also use data sets containing gender, schools and the experts' answers for each question.
 
@@ -81,15 +81,15 @@ The result of an anonymous survey regarding "Beliefs about Mathematics" which wa
 
 # Processing data
 
-Before we perform analysis, we need to transfer answers such as "Agree", "Disagree" to numeric answers. There are two methods (we considered) of doing this:  
+Before we perform analysis, we need to transfer categorical answers such as "Agree", "Disagree" to numeric answers. There are two methods (we considered) of doing this:  
 
 --
 
-  1. Each student will get 1 mark for answering the question at the same direction as the experts (e.g. "Agree" and "Strongly Agree" is at the same direction as "Agree") and 0 otherwise. 
+  1. Each student will get 1 mark for answering the question in accordance with the experts (e.g. "Agree" and "Strongly Agree" is on the same side as "Agree") and 0 otherwise. 
   
 --
   
-  2. For questions of which expected answers are "Agree", we could give marks for "Strongly Agree", "Agree", "Neutral", "Disagree" and "Strongly Disagree" as follows: 2, 1, 0, -1, -2. Vice versa.  
+  2. For questions whose expected answers are "Agree", we could give marks for "Strongly Agree", "Agree", "Neutral", "Disagree" and "Strongly Disagree" as follows: 2, 1, 0, -1, -2. Works similarly (with opposite values) for "Disagree".
 
 ---
 
@@ -101,7 +101,7 @@ We decided to use the first method because:
 
 --
 
-As the answer from the experts comes in only two variants ("agree" and ""disagree"), and we cannot know to what degree they actually agree with a choice like the one that's been given to the students (So it doesn't make sense that "Strongly Agree" necessarily earns more marks than "Agree").
+As the answer from the experts only comes in two variants ("Agree" and "Disagree"), and we cannot know to what degree they actually agree with a choice like the one that's been given to the students (so it doesn't make sense that "Strongly Agree" necessarily earns more marks than "Agree").
 
 ---
 
@@ -123,7 +123,7 @@ class: inverse, middle, center
 
 --
 
-- Then, from the results, we generated a bar chart showing the number of students in each mark (0 to 31) and a histogram showing the number of people in each percentage of marks.
+- Then, from the results, we generated a bar chart showing the number of students for each mark achieved (from 0 to 31) and a histogram showing the number of people in each percentage of marks.
 
 ---
 
@@ -187,7 +187,7 @@ responses_numeric1_filtered %>%
 ```
 
 .footnote[
-[*] some schools are removed because number of students from this school is too few to draw representative results.
+[*] Some schools are removed because number of students from this school is too few to draw representative results.
 ]
 
 ---
@@ -198,7 +198,7 @@ responses_numeric1_filtered %>%
 
 .pull-left[
 - They have differences in their average marks.
-- They have similar patterns of rates of correctness.
+- They have similar patterns in rates of correctness.
 ]
 
 .pull-right[
@@ -352,22 +352,22 @@ Questions are divided into a number of categories* listed below:
 
 --
 
-- Persistence in Problem Solving: Questions No.8, 10, 24, 29  
+- Persistence in Problem Solving: Questions No. 8, 10, 24, 29  
 
-- Growth Mindset (Students' belief about whether mathematical ability is innate or can be developed.): Question No.5, 6, 22, 31  
+- Growth Mindset (Students' belief about whether mathematical ability is innate or can be developed.): Question No. 5, 6, 22, 31  
 
-- Interest in Mathematics: Question No.12, 26, 32  
+- Interest in Mathematics: Question No. 12, 26, 32  
 
-- Relationship between Mathematics and Real World: Question No.13, 15, 21  
+- Relationship between Mathematics and Real World: Question No. 13, 15, 21  
 
-- Sense Making (Whether students care about sense making in problem solving): Question No.3, 4, 11, 18, 23 
+- Sense Making (Whether students care about sense making in problem solving): Question No. 3, 4, 11, 18, 23 
 
-- Nature of the Answers (Students' views on the nature of solutions to mathematics problems): Question No.2, 7, 9, 16, 28, 30  
+- Nature of the Answers (Students' views on the nature of solutions to mathematics problems): Question No. 2, 7, 9, 16, 28, 30  
 
-- No category: Question No.25, 27 
+- No category: Question No. 25, 27 
 
 .footnote[
-See Reference in README for support
+[*] See Reference in README for support
 ]
 ---
 
@@ -375,11 +375,11 @@ See Reference in README for support
 
 --
 
-We tested the linear correlation between different categories and generate a pearson correlation coefficient for each pair of categories.
+We tested the linear correlation between different categories and generate a Pearson correlation coefficient for each pair of categories.
 
 --
 
-It turned out that there is no strong linear correlation (Coefficient < 0.4).
+It turned out that there is no strong linear correlation for any pair (Pearson coefficient < 0.4).
 
 --
 
@@ -421,12 +421,12 @@ kable(correlation_matrix, format = "html")
 
 # Logistic Regression 
 
-Therefore, we decided to use a logistic regression to find stronger correlation.  
-We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (We called it critical number), otherwise it will be 0.
+Therefore, we decided to use a logistic regression to find stronger correlations.  
+We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (which we called "critical number"), otherwise it will be 0.
 
 --
 
-Critical Number are shown as follows:  
+Critical Numbers are as follows:  
 
   - Confidence in Mathematics: 2
   
@@ -530,7 +530,7 @@ kable(roc_matrix, format = "html")
 
 In this table, rows represent dependent variables and columns represent independent variables.  
 
-We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. So, we will take a look at the model.
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. Let's take a look at the model.
 
 ---
 
@@ -565,14 +565,18 @@ kable(tidy(interest_confidence_fit), format = "html")
 
 ```
 
-$p$ is the probability that at least $2/3$ of questions in the category "Interest" are answered correctly, $x$ is the number of questions answered correctly in the category "Confidence".
+$p$ is the probability that at least $2/3$ of questions in the category "Interest" are answered correctly, while $x$ is the number of questions answered correctly in the category "Confidence".
 
 $$log(\frac{p}{1-p}) = 0.626970x + 0.253635$$
 ---
 
 # ROC curve for the model
 
-```{r roc-for-analysis3-logistic, echo = FALSE}
+.pull-text[
+The AUC is the area under this curve, and higher AUC in short, represents better prediction made by the model.
+]
+
+```{r roc-for-analysis3-logistic, echo = FALSE, out.height = "80%", out.width = "60%"}
 predict(interest_confidence_fit, interest_confidence_testing_data, type = "prob") %>%
   bind_cols(interest_confidence_testing_data) %>%
   roc_curve(
@@ -584,19 +588,11 @@ predict(interest_confidence_fit, interest_confidence_testing_data, type = "prob"
 
 ```
 
-.pull-text[
-The AUC is the area under this curve, and higher AUC in short, represents better prediction made by the model.
-]
 
 ---
 
-# Feeling adventurous?
+class: inverse, middle, center
 
-- Want to find out more about `xaringan`? See https://slides.yihui.name/xaringan/#1.
+# Thank you for your attention!
 
-- You are welcomed to use the default styling of the slides. In fact, that's what I expect majority of you will do. You will differentiate yourself with the content of your presentation.
 
-- But some of you might want to play around with slide styling. The 
-`xaringanthemer` provides some solutions for this that: https://pkg.garrickadenbuie.com/xaringanthemer.
-
-- And if you want more bells and whistles, there is also `xaringanExtra`: https://pkg.garrickadenbuie.com/xaringanExtra.

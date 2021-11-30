@@ -160,19 +160,17 @@ responses_numeric1_filtered %>%
   
 ```{r difference-question-gender}
 responses_female <- responses_numeric1_filtered %>%
-  filter(is.na(gender) == FALSE) %>%
+  filter(gender == "F") %>%
   group_by(qnum, gender) %>%
   summarise(
     percentage_correctness = sum(mark) / n() * 100
-    ) %>%
-  filter(gender == "F")
+    ) 
 responses_male <- responses_numeric1_filtered %>%
-  filter(is.na(gender) == FALSE) %>%
+  filter(gender == "M") %>%
   group_by(qnum, gender) %>%
   summarise(
     percentage_correctness = sum(mark) / n() * 100
-    ) %>%
-  filter(gender == "M")
+    ) 
 difference_marks <- tibble(
   qnum = responses_male$qnum,
   male_mark = responses_male$percentage_correctness,
