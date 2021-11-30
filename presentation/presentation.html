@@ -4,7 +4,7 @@
     <title>Student’s Beliefs about Mathematics</title>
     <meta charset="utf-8" />
     <meta name="author" content="The Mathematicians   Alfin Hou, Pietro Rossi and Sandy Braun" />
-    <meta name="date" content="2021-11-28" />
+    <meta name="date" content="2021-11-30" />
     <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 # Student’s Beliefs about Mathematics
 ### The Mathematicians <br> Alfin Hou, Pietro Rossi and Sandy Braun
 ### University of Edinburgh
-### 2021-11-28
+### 2021-11-30
 
 ---
 
@@ -172,92 +172,256 @@ class: inverse, middle, center
 
 ---
 
-# Plot and text
+class: inverse, middle, center
 
-.pull-left[
-- Some text
-- goes here
-]
-.pull-right[
-&lt;img src="presentation_files/figure-html/unnamed-chunk-1-1.png" width="100%" /&gt;
-]
+# Are there any correlations between answers/groups of answers?
 
 ---
 
-# Tables
+# Categorising questions
 
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+Questions are divided into a number of categories* listed below:  
+
+--
+
+- Persistence in Problem Solving: Questions No.8, 10, 24, 29  
+
+- Growth Mindset (Students' belief about whether mathematical ability is innate or can be developed.): Question No.5, 6, 22, 31  
+
+- Interest in Mathematics: Question No.12, 26, 32  
+
+- Relationship between Mathematics and Real World: Question No.13, 15, 21  
+
+- Sense Making (Whether students care about sense making in problem solving): Question No.3, 4, 11, 18, 23 
+
+- Nature of the Answers (Students' views on the nature of solutions to mathematics problems): Question No.2, 7, 9, 16, 28, 30  
+
+- No category: Question No.25, 27 
+
+.footnote[
+See Reference in README for support
+]
+---
+
+# Testing linearity
+
+--
+
+We tested the linear correlation between different categories and generate a pearson correlation coefficient for each pair of categories.
+
+--
+
+It turned out that there is no strong linear correlation (Coefficient &lt; 0.4).
+
+--
 
 &lt;table&gt;
  &lt;thead&gt;
   &lt;tr&gt;
-   &lt;th style="text-align:right;"&gt; Sepal.Length &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Sepal.Width &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Petal.Length &lt;/th&gt;
-   &lt;th style="text-align:right;"&gt; Petal.Width &lt;/th&gt;
-   &lt;th style="text-align:left;"&gt; Species &lt;/th&gt;
+   &lt;th style="text-align:left;"&gt;   &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; confidence &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; growth_mindset &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; interest &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; nature &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; persistence &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; real_world &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sense &lt;/th&gt;
   &lt;/tr&gt;
  &lt;/thead&gt;
 &lt;tbody&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 5.1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; confidence &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1013221 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3189357 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1614555 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3146481 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0755797 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1910234 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4.9 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; growth_mindset &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1013221 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1757021 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2126943 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0837701 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2451418 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2227259 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4.7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.2 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.3 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; interest &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3189357 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1757021 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2869885 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2900146 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3658693 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3671740 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 4.6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.1 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.5 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; nature &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1614555 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2126943 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2869885 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2322073 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2243523 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2991264 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 5.0 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.6 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.2 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; persistence &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3146481 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0837701 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2900146 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2322073 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1629382 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3304753 &lt;/td&gt;
   &lt;/tr&gt;
   &lt;tr&gt;
-   &lt;td style="text-align:right;"&gt; 5.4 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 3.9 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 1.7 &lt;/td&gt;
-   &lt;td style="text-align:right;"&gt; 0.4 &lt;/td&gt;
-   &lt;td style="text-align:left;"&gt; setosa &lt;/td&gt;
+   &lt;td style="text-align:left;"&gt; real_world &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.0755797 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2451418 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3658693 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2243523 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1629382 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3416629 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:left;"&gt; sense &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.1910234 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2227259 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3671740 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.2991264 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3304753 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.3416629 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 1.0000000 &lt;/td&gt;
   &lt;/tr&gt;
 &lt;/tbody&gt;
 &lt;/table&gt;
 
 ---
 
-# Images
+# Logistic Regression 
 
-&lt;div class="figure" style="text-align: center"&gt;
-&lt;img src="https://images.unsplash.com/photo-1535448033526-c0e85c9e6968?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1650&amp;q=80" alt="Image credit: Photo by Jörg Angeli on Unsplash." width="60%" /&gt;
-&lt;p class="caption"&gt;Image credit: Photo by Jörg Angeli on Unsplash.&lt;/p&gt;
-&lt;/div&gt;
+Therefore, we decided to use a logistic regression to find stronger correlation.  
+We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (We called it critical number), otherwise it will be 0.
 
-Or you can also include a full page image. See next slide.
+--
+
+Critical Number are shown as follows:  
+
+  - Confidence in Mathematics: 2
+  
+  - Persistence in Problem Solving: 2 
+  
+  - Growth Mindset: 2 
+  
+  - Interest in Mathematics: 1
+  
+  - Relationship between Mathematics and Real World: 1 
+  
+  - Sense Making: 2  
+  
+  - Nature of the Answers: 3  
+
 
 ---
 
-background-image: url(https://images.unsplash.com/photo-1535448033526-c0e85c9e6968?ixlib=rb-1.2.1&amp;ixid=eyJhcHBfaWQiOjEyMDd9&amp;auto=format&amp;fit=crop&amp;w=1650&amp;q=80)
+# Logistic Regression
+
+Then we fit a model for each pair of the categories and calculate the AUC for each model fitted.
+
+&lt;table&gt;
+ &lt;thead&gt;
+  &lt;tr&gt;
+   &lt;th style="text-align:right;"&gt; confidence &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; growth_mindset &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; interest &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; nature &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; persistence &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; real_world &lt;/th&gt;
+   &lt;th style="text-align:right;"&gt; sense &lt;/th&gt;
+  &lt;/tr&gt;
+ &lt;/thead&gt;
+&lt;tbody&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5559330 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6503623 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4759964 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6682518 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4934330 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5903533 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.6287594 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6456767 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5963346 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5404135 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6463816 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6139568 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.8321314 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5228365 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5709135 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5849359 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6698718 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.7027244 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.6053276 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6169626 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5979792 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6132884 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6604409 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6429884 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.6839945 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5013680 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5738714 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6251710 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.4778842 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5875513 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.5038402 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6349206 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6740911 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5780850 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5033282 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6833077 &lt;/td&gt;
+  &lt;/tr&gt;
+  &lt;tr&gt;
+   &lt;td style="text-align:right;"&gt; 0.6291062 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6172651 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5832697 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.5840336 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6348358 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; 0.6760886 &lt;/td&gt;
+   &lt;td style="text-align:right;"&gt; NA &lt;/td&gt;
+  &lt;/tr&gt;
+&lt;/tbody&gt;
+&lt;/table&gt;
+
+In this table, rows represent dependent variables and columns represent independent variables.  
+
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table So we will take a look at the model.
+
+---
+
+# Interest ~ Confidence Model
+
+
 
 ---
 

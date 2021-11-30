@@ -36,6 +36,7 @@ knitr::opts_knit$set(root.dir = "/cloud/project/data")
 ```{r load-data, include=FALSE}
 responses_numeric1_filtered <- read_csv("responses_numeric1_filtered.csv")
 responses_numeric2_filtered <- read_csv("responses_numeric2_filtered.csv")
+roc_matrix <- read_csv("roc_matrix.csv")
 ```
 
 ```{r style-setting, include=FALSE}
@@ -291,45 +292,129 @@ responses_numeric1_filtered %>%
 
 ---
 
-# Plot and text
+class: inverse, middle, center
 
-.pull-left[
-- Some text
-- goes here
+# Are there any correlations between answers/groups of answers?
+
+---
+
+# Categorising questions
+
+Questions are divided into a number of categories* listed below:  
+
+--
+
+- Persistence in Problem Solving: Questions No.8, 10, 24, 29  
+
+- Growth Mindset (Students' belief about whether mathematical ability is innate or can be developed.): Question No.5, 6, 22, 31  
+
+- Interest in Mathematics: Question No.12, 26, 32  
+
+- Relationship between Mathematics and Real World: Question No.13, 15, 21  
+
+- Sense Making (Whether students care about sense making in problem solving): Question No.3, 4, 11, 18, 23 
+
+- Nature of the Answers (Students' views on the nature of solutions to mathematics problems): Question No.2, 7, 9, 16, 28, 30  
+
+- No category: Question No.25, 27 
+
+.footnote[
+See Reference in README for support
 ]
-.pull-right[
-```{r warning=FALSE, out.width="100%", fig.width=4, echo=FALSE}
-# see how I changed out.width and fig.width from defaults
-# to make the figure bigger
-ggplot(penguins, aes(x = bill_length_mm, y = species, color = species)) +
-  geom_boxplot() +
-  theme_minimal()
+---
+
+# Testing linearity
+
+--
+
+We tested the linear correlation between different categories and generate a pearson correlation coefficient for each pair of categories.
+
+--
+
+It turned out that there is no strong linear correlation (Coefficient < 0.4).
+
+--
+
+```{r table-for-analysis3-linearity, echo = FALSE}
+not_finish_list <- responses_numeric1_filtered %>%
+  filter(is.na(answer) == TRUE) 
+not_finish_list <- as_tibble(unique(not_finish_list$anon_id))
+not_finish_list <- not_finish_list %>%
+  rename(anon_id = value)
+
+responses_part2 <- anti_join(responses_numeric1_filtered, not_finish_list, by = "anon_id")
+
+responses_summary_part2 <- responses_part2 %>%
+  filter(qnum != 19) %>%
+  group_by(anon_id, category) %>%
+  summarise(sum_category_mark = sum(mark), .groups = "keep")
+
+responses_summary_part2 <- responses_summary_part2 %>%
+  pivot_wider(names_from = category, values_from = sum_category_mark)
+correlation_matrix <- data.frame(matrix(ncol = 8, nrow = 8))
+rownames(correlation_matrix) <- colnames(responses_summary_part2[2:9])
+colnames(correlation_matrix) <- colnames(responses_summary_part2[2:9])
+for (i in 1:8) {
+  for (j in 1:8) {
+    x <- responses_summary_part2[i + 1]
+    y <- responses_summary_part2[j + 1]
+    correlation_matrix[i, j] <- cor(x, y, method = "pearson")
+  }
+}
+
+correlation_matrix <- correlation_matrix %>%
+  select(-c("no_category"))
+correlation_matrix <- correlation_matrix[-c(5),]
+
+kable(correlation_matrix, format = "html")
 ```
-]
 
 ---
 
-# Tables
+# Logistic Regression 
 
-If you want to generate a table, make sure it is in the HTML format (instead of Markdown or other formats), e.g.,
+Therefore, we decided to use a logistic regression to find stronger correlation.  
+We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (We called it critical number), otherwise it will be 0.
 
-```{r iris-table, echo = FALSE}
-kable(head(iris), format = "html")
-```
+--
+
+Critical Number are shown as follows:  
+
+  - Confidence in Mathematics: 2
+  
+  - Persistence in Problem Solving: 2 
+  
+  - Growth Mindset: 2 
+  
+  - Interest in Mathematics: 1
+  
+  - Relationship between Mathematics and Real World: 1 
+  
+  - Sense Making: 2  
+  
+  - Nature of the Answers: 3  
+
 
 ---
 
-# Images
+# Logistic Regression
 
-```{r castle, echo = FALSE, out.width = "60%", fig.align = "center", fig.cap = "Image credit: Photo by Jörg Angeli on Unsplash."}
-include_graphics("https://images.unsplash.com/photo-1535448033526-c0e85c9e6968?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80")
+Then we fit a model for each pair of the categories and calculate the AUC for each model fitted.
+
+```{r table-for-analysis3-logistic, echo = FALSE}
+kable(roc_matrix, format = "html")
+
 ```
 
-Or you can also include a full page image. See next slide.
+In this table, rows represent dependent variables and columns represent independent variables.  
+
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table So we will take a look at the model.
 
 ---
 
-background-image: url(https://images.unsplash.com/photo-1535448033526-c0e85c9e6968?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=1650&q=80)
+# Interest ~ Confidence Model
+
+
 
 ---
 
