@@ -4,7 +4,7 @@
     <title>Students’ Beliefs about Mathematics</title>
     <meta charset="utf-8" />
     <meta name="author" content="The Mathematicians   Alfin Hou, Pietro Rossi and Sandy Braun" />
-    <meta name="date" content="2021-11-30" />
+    <meta name="date" content="2021-12-01" />
     <script src="libs/header-attrs-2.11/header-attrs.js"></script>
     <link rel="stylesheet" href="xaringan-themer.css" type="text/css" />
   </head>
@@ -15,7 +15,7 @@ class: center, middle, inverse, title-slide
 # Students’ Beliefs about Mathematics
 ### The Mathematicians <br> Alfin Hou, Pietro Rossi and Sandy Braun
 ### The University of Edinburgh
-### 2021-11-30
+### 2021-12-01
 
 ---
 
@@ -364,11 +364,12 @@ It turned out that there is no strong linear correlation for any pair (Pearson c
 # Logistic Regression 
 
 Therefore, we decided to use a logistic regression to find stronger correlations.  
+
 We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (which we called "critical number"), otherwise it will be 0.
 
---
+We get the following critical numbers that would reduce Type I/II errors to a satisfactory level:
 
-Critical Numbers are as follows:  
+--
 
   - Confidence in Mathematics: 2
   
@@ -479,7 +480,7 @@ Then we fit a model for each pair of the categories and calculate the AUC for ea
 
 In this table, rows represent dependent variables and columns represent independent variables.  
 
-We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. Let's take a look at the model.
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is &lt;span style="color:red"&gt;0.8321314&lt;/span&gt;, which is the highest in the table. Let's take a look at the model.
 
 ---
 
@@ -515,9 +516,11 @@ We can see that the AUC when interest is the dependent variable and confidence i
 
 `\(p\)` is the probability that at least `\(2/3\)` of questions in the category "Interest" are answered correctly, while `\(x\)` is the number of questions answered correctly in the category "Confidence".
 
-`$$log(\frac{p}{1-p}) = 0.626970x + 0.253635$$`
----
+`$$lg(\frac{p}{1-p}) = 0.626970x + 0.253635$$`
+`$$p=\frac{e^(0.626970x + 0.253635)}{1+e^(0.626970x + 0.253635)}$$`
+It shows that as more quuestions in the category "Confidence" are answered correctly, the probability of answering at least `\(2/3\)` of questions in the category "Interest" correctly will also be higher.
 
+---
 # ROC curve for the model
 
 .pull-text[

@@ -36,7 +36,6 @@ knitr::opts_knit$set(root.dir = "/cloud/project/data")
 ```{r load-data, include=FALSE}
 responses_numeric1_filtered <- read_csv("responses_numeric1_filtered.csv")
 responses_numeric2_filtered <- read_csv("responses_numeric2_filtered.csv")
-roc_matrix <- read_csv("roc_matrix.csv")
 ```
 
 ```{r style-setting, include=FALSE}
@@ -422,11 +421,12 @@ kable(correlation_matrix, format = "html")
 # Logistic Regression 
 
 Therefore, we decided to use a logistic regression to find stronger correlations.  
+
 We sum up the marks in different categories for each student and we decided that for categories as dependent variables, the mark for each student would be 1 if the mark is higher than a certain number (which we called "critical number"), otherwise it will be 0.
 
---
+We get the following critical numbers that would reduce Type I/II errors to a satisfactory level:
 
-Critical Numbers are as follows:  
+--
 
   - Confidence in Mathematics: 2
   
@@ -530,7 +530,7 @@ kable(roc_matrix, format = "html")
 
 In this table, rows represent dependent variables and columns represent independent variables.  
 
-We can see that the AUC when interest is the dependent variable and confidence is the independent variable is 0.8321314, which is the highest in the table. Let's take a look at the model.
+We can see that the AUC when interest is the dependent variable and confidence is the independent variable is <span style="color:red">0.8321314</span>, which is the highest in the table. Let's take a look at the model.
 
 ---
 
@@ -567,9 +567,11 @@ kable(tidy(interest_confidence_fit), format = "html")
 
 $p$ is the probability that at least $2/3$ of questions in the category "Interest" are answered correctly, while $x$ is the number of questions answered correctly in the category "Confidence".
 
-$$log(\frac{p}{1-p}) = 0.626970x + 0.253635$$
----
+$$lg(\frac{p}{1-p}) = 0.626970x + 0.253635$$
+$$p=\frac{e^(0.626970x + 0.253635)}{1+e^(0.626970x + 0.253635)}$$
+It shows that as more quuestions in the category "Confidence" are answered correctly, the probability of answering at least $2/3$ of questions in the category "Interest" correctly will also be higher.
 
+---
 # ROC curve for the model
 
 .pull-text[
